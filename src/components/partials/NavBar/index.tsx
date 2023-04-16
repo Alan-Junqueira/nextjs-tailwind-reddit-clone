@@ -1,5 +1,7 @@
+import { SearchInput } from '@/components/SearchInput'
 import Image from 'next/image'
 import React from 'react'
+import { RightContent } from './RightContent'
 
 export const NavBar = () => {
   return (
@@ -19,6 +21,9 @@ export const NavBar = () => {
           className="hidden md:block"
         />
       </div>
+      {/* <Directory /> */}
+      <SearchInput />
+      <RightContent />
     </header>
   )
 }
