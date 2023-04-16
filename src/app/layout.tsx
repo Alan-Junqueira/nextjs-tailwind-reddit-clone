@@ -1,6 +1,7 @@
 import { ReactNode } from 'react'
 import './globals.css'
 import { Open_Sans } from 'next/font/google'
+import { NavBar } from '@/components/partials/NavBar'
 
 const openSans = Open_Sans({
   subsets: ['latin'],
@@ -15,7 +16,10 @@ export const metadata = {
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" className={openSans.className}>
-      <body className="bg-gray-20">{children}</body>
+      <body className="bg-gray-20">
+        <NavBar />
+        {children}
+      </body>
     </html>
   )
 }
