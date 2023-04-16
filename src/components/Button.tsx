@@ -6,19 +6,19 @@ interface IButton extends ButtonHTMLAttributes<HTMLButtonElement> {
   children: ReactNode
 }
 
-const buttonConfig = {
-  sizes: {
-    sm: 'text-2',
-    md: 'text-[10px]',
-  },
-  variants: {
-    solid: 'text-white bg-blue-500 hover:bg-blue-400',
-    outline: 'text-blue-500 border-[1px] border-solid border-blue-500',
-    oauth: 'h-9 border[1px] border-solid border-gray-300 hover:bg-gray-50',
-  },
-}
-
 export const Button = ({ variant, size, children, ...props }: IButton) => {
+  const buttonConfig = {
+    sizes: {
+      sm: 'text-2',
+      md: 'text-[10px]',
+    },
+    variants: {
+      solid: 'text-white bg-blue-500 hover:bg-blue-400',
+      outline: 'text-blue-500 border-[1px] border-solid border-blue-500',
+      oauth: 'h-9 border[1px] border-solid border-gray-300 hover:bg-gray-50',
+    },
+  }
+
   return (
     <button
       {...props}

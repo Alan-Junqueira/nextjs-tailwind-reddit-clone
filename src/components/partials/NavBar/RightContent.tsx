@@ -1,17 +1,11 @@
-import React from 'react'
 import { AuthButtons } from './AuthButtons'
+import { AuthModal } from '@/components/modals/auth/AuthModal'
 
-interface IRightContent {
-  user?: any
-}
-
-export const RightContent = ({ user }: IRightContent) => {
+export const RightContent = () => {
   return (
     <>
-      {/* <AuthModal /> */}
-      <div className="flex items-center justify-center">
-        <AuthButtons />
-      </div>
+      <AuthModal />
+      <AuthButtons />
     </>
   )
 }
