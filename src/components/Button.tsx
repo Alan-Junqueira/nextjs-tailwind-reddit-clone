@@ -25,9 +25,10 @@ export const Button = ({ variant, size, children, ...props }: IButton) => {
       className={`
       flex items-center justify-center
       rounded-[60px] text-xs font-bold
+      transition-all ease-in duration-200
       focus:shadow-none 
       ${size && buttonConfig.sizes[size]} 
-      ${variant && buttonConfig.variants[variant]}
+      ${variant ? buttonConfig.variants[variant] : buttonConfig.variants.solid}
       ${props.className}
       `}
     >

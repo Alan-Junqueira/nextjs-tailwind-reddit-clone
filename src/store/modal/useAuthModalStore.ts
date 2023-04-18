@@ -10,6 +10,7 @@ type AuthModalState = {
 type AuthModalActions = {
   openModal: (modalName: AuthViews) => void
   closeModal: () => void
+  changeOpenModal: (modalName: AuthViews) => void
 }
 
 interface AuthStoreProps {
@@ -31,6 +32,11 @@ export const useAuthModalStore = create<AuthStoreProps>((set) => ({
       set((state) => ({
         ...state,
         state: { ...state.state, open: false },
+      })),
+    changeOpenModal: (modalName: AuthViews) =>
+      set((state) => ({
+        ...state,
+        state: { ...state.state, view: modalName },
       })),
   },
 }))
