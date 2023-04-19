@@ -10,7 +10,11 @@ export const InputRef = forwardRef<HTMLInputElement, InputProps>(
     return (
       <>
         {iconLeft && iconLeft()}
-        <input ref={ref} {...props} className={`w-full ${props.className}`} />
+        <input
+          ref={ref}
+          {...props}
+          className={`w-full text-gray-700 ${props.className}`}
+        />
         {iconRight && iconRight()}
       </>
     )

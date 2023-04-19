@@ -2,19 +2,22 @@ import React from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Input } from '@/components/Input'
 import { InputRef } from '@/components/InputRef'
 import { InputContainer } from '@/components/InputContainer'
 import { Button } from '@/components/Button'
-import Link from 'next/link'
 import { useAuthModalStore } from '@/store/modal/useAuthModalStore'
+import { useCreateUserWithEmailAndPassword } from 'react-firebase-hooks/auth'
+import { TextError } from './TextError'
+import Image from 'next/image'
+import { auth } from '@/firebase/clientApp'
+import { FIREBASE_ERRORS } from '@/firebase/errors'
 
 const signUpSchema = z
   .object({
     email: z.string().email({ message: 'Digite um email válido' }),
     password: z
       .string()
-      .min(4, { message: 'Email deve ter no mínimo 4 caracteres' }),
+      .min(6, { message: 'Senha deve ter no mínimo 6 caracteres' }),
     confirmPassword: z.string(),
   })
   .refine((data) => data.password === data.confirmPassword, {
@@ -32,23 +35,27 @@ export const SignUp = () => {
   const {
     register,
     handleSubmit,
-    formState: { isSubmitting, error },
+    formState: { isSubmitting, errors },
   } = useForm<SignUpInputs>({
     resolver: zodResolver(signUpSchema),
   })
 
+  const [createUserWithEmailAndPassword, user, loading, firebaseError] =
+    useCreateUserWithEmailAndPassword(auth)
+
   const handleLoginForm = (data: SignUpInputs) => {
+    const { email, password } = data
     console.log(data)
+    createUserWithEmailAndPassword(email, password)
   }
 
   return (
     <form className="w-full" onSubmit={handleSubmit(handleLoginForm)}>
-      <InputContainer className="flex mb-2">
+      <InputContainer className="flex flex-col gap-1 mb-2">
         <InputRef
           {...register('email')}
           placeholder="jhondoe@example.com"
-          type="email"
-          required
+          type="text"
           className="
             text-xs bg-gray-50 py-3 px-4 rounded-lg
             placeholder:text-gray-500 
@@ -57,13 +64,13 @@ export const SignUp = () => {
             focus:outline-none focus:bg-white focus:border-blue-500
           "
         />
+        <TextError>{errors.email?.message}</TextError>
       </InputContainer>
-      <InputContainer className="flex mb-2">
+      <InputContainer className="flex flex-col gap-1 mb-2">
         <InputRef
           {...register('password')}
           placeholder="password"
           type="password"
-          required
           className="
             text-xs bg-gray-50 py-3 px-4 rounded-lg
             placeholder:text-gray-500 
@@ -72,13 +79,13 @@ export const SignUp = () => {
             focus:outline-none focus:bg-white focus:border-blue-500
           "
         />
+        <TextError>{errors.password?.message}</TextError>
       </InputContainer>
-      <InputContainer className="flex mb-2">
+      <InputContainer className="flex flex-col gap-1 mb-2">
         <InputRef
           {...register('confirmPassword')}
           placeholder="confirm password"
           type="password"
-          required
           className="
             text-xs bg-gray-50 py-3 px-4 rounded-lg
             placeholder:text-gray-500 
@@ -87,10 +94,32 @@ export const SignUp = () => {
             focus:outline-none focus:bg-white focus:border-blue-500
           "
         />
+        <TextError>{errors.confirmPassword?.message}</TextError>
       </InputContainer>
-      <Button className="w-full h-9 mt-6 mb-2" size="md" type="submit">
-        Sign Up
+      <Button
+        className="w-full h-9 mt-6 mb-1"
+        size="md"
+        type="submit"
+        disabled={isSubmitting || loading}
+      >
+        {isSubmitting || loading ? (
+          <Image
+            src="/assets/images/6-dots-rotate.svg"
+            width={20}
+            height={20}
+            alt="carregando"
+          />
+        ) : (
+          <>Sign Up</>
+        )}
       </Button>
+      <TextError className="mb-2 text-center">
+        {
+          FIREBASE_ERRORS[
+          firebaseError?.message as keyof typeof FIREBASE_ERRORS
+          ]
+        }
+      </TextError>
       <div className="flex justify-center gap-1 text-xs">
         <span>Already a redditor?</span>
         <strong
