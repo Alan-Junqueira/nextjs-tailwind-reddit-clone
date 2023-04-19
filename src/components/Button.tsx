@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import React, { ButtonHTMLAttributes, ReactNode } from 'react'
 
 interface IButton extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -35,7 +36,12 @@ export const Button = ({ variant, size, children, ...props }: IButton) => {
       ${props.className}
       `}
     >
-      {children}
+      {props.disabled ? <Image
+        src="/assets/images/6-dots-rotate.svg"
+        width={20}
+        height={20}
+        alt="carregando"
+      /> : children}
     </button>
   )
 }

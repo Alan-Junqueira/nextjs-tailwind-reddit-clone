@@ -102,16 +102,7 @@ export const SignUp = () => {
         type="submit"
         disabled={isSubmitting || loading}
       >
-        {isSubmitting || loading ? (
-          <Image
-            src="/assets/images/6-dots-rotate.svg"
-            width={20}
-            height={20}
-            alt="carregando"
-          />
-        ) : (
-          <>Sign Up</>
-        )}
+        Sign Up
       </Button>
       <TextError className="mb-2 text-center">
         {
