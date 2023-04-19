@@ -30,6 +30,7 @@ export const Button = ({ variant, size, children, ...props }: IButton) => {
       transition-all ease-in duration-200
       py-3 px-4
       focus:shadow-none 
+      whitespace-nowrap
       disabled:cursor-not-allowed disabled:opacity-50
       ${size && buttonConfig.sizes[size]} 
       ${variant ? buttonConfig.variants[variant] : buttonConfig.variants.solid}

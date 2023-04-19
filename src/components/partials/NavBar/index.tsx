@@ -1,9 +1,15 @@
+'use client'
+
 import { SearchInput } from '@/components/SearchInput'
 import Image from 'next/image'
 import React from 'react'
 import { RightContent } from './RightContent'
+import { useAuthState } from 'react-firebase-hooks/auth'
+import { auth } from '@/firebase/clientApp'
 
 export const NavBar = () => {
+  const [user, loading, error] = useAuthState(auth)
+
   return (
     <header className="flex bg-white h-11 px-3 py-2">
       <div className="flex items-center">
@@ -23,7 +29,7 @@ export const NavBar = () => {
       </div>
       {/* <Directory /> */}
       <SearchInput />
-      <RightContent />
+      <RightContent user={user} />
     </header>
   )
 }

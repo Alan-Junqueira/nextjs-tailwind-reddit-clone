@@ -7,8 +7,11 @@ import { useEffect } from 'react'
 import { AiOutlineClose } from 'react-icons/ai'
 import { AuthInputs } from './AuthInputs'
 import { OauthButtons } from './OauthButtons'
+import { useAuthState } from 'react-firebase-hooks/auth'
+import { auth } from '@/firebase/clientApp'
 
 export const AuthModal = () => {
+  const [user, loading, error] = useAuthState(auth)
   const {
     actions: { closeModal },
     state: { open, view },
@@ -27,6 +30,11 @@ export const AuthModal = () => {
       window.removeEventListener('keydown', handleKeyDown)
     }
   }, [closeModal])
+
+  useEffect(() => {
+    if(user) closeModal()
+    console.log(user)
+  },[closeModal, user])
 
   const title = changeFirstLetterToUppercase(view)
 
@@ -74,7 +82,7 @@ export const AuthModal = () => {
             className="
               text-gray-900 
               absolute top-[10px] right-[10px] 
-              h-[25px] w-[25px] 
+              h-[30px] w-[30px] 
               appearance-none 
               flex items-center justify-center 
               rounded-lg
@@ -84,7 +92,7 @@ export const AuthModal = () => {
               outline-none
             "
           >
-            <AiOutlineClose />
+            <AiOutlineClose size={15} />
           </Dialog.Close>
         </Dialog.Content>
       </Dialog.Portal>
