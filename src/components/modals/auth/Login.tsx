@@ -91,6 +91,15 @@ export const Login = () => {
         firebaseError?.message as keyof typeof FIREBASE_ERRORS
         ]
       }</TextError>
+      <div className="flex justify-center gap-1 text-xs my-2">
+        <span>Forgot your password?</span>
+        <strong
+          className="text-blue-500 cursor-pointer"
+          onClick={() => changeOpenModal('resetPassword')}
+        >
+          Reset
+        </strong>
+      </div>
       <div className="flex justify-center gap-1 text-xs">
         <span>New here?</span>
         <strong

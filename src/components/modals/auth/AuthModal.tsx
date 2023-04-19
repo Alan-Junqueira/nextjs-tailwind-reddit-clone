@@ -9,6 +9,7 @@ import { AuthInputs } from './AuthInputs'
 import { OauthButtons } from './OauthButtons'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { auth } from '@/firebase/clientApp'
+import { ResetPassword } from './ResetPassword'
 
 export const AuthModal = () => {
   const [user, loading, error] = useAuthState(auth)
@@ -32,9 +33,8 @@ export const AuthModal = () => {
   }, [closeModal])
 
   useEffect(() => {
-    if(user) closeModal()
-    console.log(user)
-  },[closeModal, user])
+    if (user) closeModal()
+  }, [closeModal, user])
 
   const title = changeFirstLetterToUppercase(view)
 
@@ -71,10 +71,16 @@ export const AuthModal = () => {
                 
               "
             >
-              <OauthButtons />
-              <p className="gray-500 font-bold">OR</p>
-              <AuthInputs />
-              {/* <ResetPassword /> */}
+              {view !== "resetPassword" ? (
+                <>
+                  <OauthButtons />
+                  <p className="gray-500 font-bold">OR</p>
+                  <AuthInputs />
+                </>
+              )
+                :
+                <ResetPassword />
+              }
             </div>
           </div>
           <Dialog.Close
