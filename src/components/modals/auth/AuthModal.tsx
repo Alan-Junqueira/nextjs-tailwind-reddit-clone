@@ -6,6 +6,7 @@ import * as Dialog from '@radix-ui/react-dialog'
 import { useEffect } from 'react'
 import { AiOutlineClose } from 'react-icons/ai'
 import { AuthInputs } from './AuthInputs'
+import { OauthButtons } from './OauthButtons'
 
 export const AuthModal = () => {
   const {
@@ -62,7 +63,8 @@ export const AuthModal = () => {
                 
               "
             >
-              {/* <OauthButtons /> */}
+              <OauthButtons />
+              <p className="gray-500 font-bold">OR</p>
               <AuthInputs />
               {/* <ResetPassword /> */}
             </div>
