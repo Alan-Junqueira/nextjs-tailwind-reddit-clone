@@ -5,5 +5,5 @@ interface IInputContainer extends HTMLAttributes<HTMLDivElement> {
 }
 
 export const InputContainer = ({ children, ...props }: IInputContainer) => {
-  return <div {...props}>{children}</div>
+  return <div {...props} className={`flex flex-col gap-1 relative ${props.className}`}>{children}</div>
 }

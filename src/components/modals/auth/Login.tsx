@@ -2,12 +2,14 @@ import React from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Input } from '@/components/Input'
 import { InputRef } from '@/components/InputRef'
 import { InputContainer } from '@/components/InputContainer'
 import { Button } from '@/components/Button'
-import Link from 'next/link'
 import { useAuthModalStore } from '@/store/modal/useAuthModalStore'
+import { TextError } from './TextError'
+import { auth } from '@/firebase/clientApp'
+import { useSignInWithEmailAndPassword } from 'react-firebase-hooks/auth'
+import { FIREBASE_ERRORS } from '@/firebase/errors'
 
 const loginSchema = z.object({
   email: z.string().email({ message: 'Digite um email válido' }),
@@ -26,18 +28,26 @@ export const Login = () => {
   const {
     register,
     handleSubmit,
-    formState: { isSubmitting, error },
+    formState: { isSubmitting, errors },
   } = useForm<LoginInputs>({
     resolver: zodResolver(loginSchema),
   })
 
+  const [
+    signInWithEmailAndPassword,
+    user,
+    loading,
+    firebaseError,
+  ] = useSignInWithEmailAndPassword(auth);
+
   const handleLoginForm = (data: LoginInputs) => {
-    console.log(data)
+    const { email, password } = data
+    signInWithEmailAndPassword(email, password)
   }
 
   return (
     <form className="w-full" onSubmit={handleSubmit(handleLoginForm)}>
-      <InputContainer className="flex mb-2">
+      <InputContainer className="mb-2">
         <InputRef
           {...register('email')}
           placeholder="jhondoe@example.com"
@@ -51,8 +61,9 @@ export const Login = () => {
             focus:outline-none focus:bg-white focus:border-blue-500
           "
         />
+        <TextError>{errors.email?.message}</TextError>
       </InputContainer>
-      <InputContainer className="flex mb-2">
+      <InputContainer className="mb-2">
         <InputRef
           {...register('password')}
           placeholder="**********"
@@ -66,10 +77,20 @@ export const Login = () => {
             focus:outline-none focus:bg-white focus:border-blue-500
           "
         />
+        <TextError>{errors.password?.message}</TextError>
       </InputContainer>
-      <Button className="w-full h-9 mt-6 mb-2" size="md" type="submit">
+      <Button
+        className="w-full h-9 mt-4 mb-1"
+        size="md"
+        type="submit"
+        disabled={isSubmitting || loading}>
         Log In
       </Button>
+      <TextError className='text-center mb-1'> {
+        FIREBASE_ERRORS[
+        firebaseError?.message as keyof typeof FIREBASE_ERRORS
+        ]
+      }</TextError>
       <div className="flex justify-center gap-1 text-xs">
         <span>New here?</span>
         <strong
