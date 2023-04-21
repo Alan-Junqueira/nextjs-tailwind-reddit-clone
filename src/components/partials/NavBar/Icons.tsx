@@ -25,7 +25,7 @@ export const Icons = () => {
           <IconContainer >
             <IoNotificationsOutline size={20} />
           </IconContainer>
-          <IconContainer >
+          <IconContainer className='hidden md:flex'>
             <GrAdd size={20} />
           </IconContainer>
         </div>

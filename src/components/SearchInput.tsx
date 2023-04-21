@@ -8,14 +8,14 @@ interface ISearchInput {
 
 export const SearchInput = () => {
   return (
-    <div className="flex items-center grow mr-2 gap-2 relative">
+    <div className="ml-2 md:ml-0 flex items-center grow mr-2 gap-2 relative">
       <Input
         iconLeft={() => (
           <AiOutlineSearch className="text-gray-400 bg-gray-50 absolute left-1" />
         )}
         placeholder="Search Reddit"
         className="
-          text-xs 
+          text-xs bg-gray-50 text-gray-700
           h-9 rounded-lg px-6 border-[1px]
           placeholder:text-gray-500
           hover:bg-white hover:border-[1px] hover:border-blue-500
