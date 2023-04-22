@@ -21,11 +21,20 @@ export const UserMenu = ({ user, ...props }: IUserMenu) => {
       <DropdownMenu.Trigger
         className='
           flex items-center gap-1 cursor-pointer rounded px-[6px]
-          hover:outline-1 hover:outline hover:outline-gray-200
+          hover:outline-1 hover:outline hover:outline-gray-200 focus:outline-gray-200
         '
       >
         {user ? (
-          <FaRedditSquare size={24} className='text-gray-300' />
+          <>
+            <FaRedditSquare size={24} className='text-gray-300' />
+            <div className='hidden flex-col lg:flex text-[8px] items-center mr-2'>
+              <p className='font-bold'>{user.displayName || user.email?.split("@")[0]}</p>
+              <div className='flex self-start gap-1'>
+                <IoSparkles className='text-brand-100' />
+                <span className='text-gray-400'>karma</span>
+              </div>
+            </div>
+          </>
         ) : (
           <VscAccount size={24} className='text-gray-400' />
         )}
