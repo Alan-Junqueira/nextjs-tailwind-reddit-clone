@@ -31,7 +31,7 @@ export const UserMenu = ({ user, ...props }: IUserMenu) => {
               <p className='font-bold'>{user.displayName || user.email?.split("@")[0]}</p>
               <div className='flex self-start gap-1'>
                 <IoSparkles className='text-brand-100' />
-                <span className='text-gray-400'>karma</span>
+                <span className='text-gray-400'>1 karma</span>
               </div>
             </div>
           </>

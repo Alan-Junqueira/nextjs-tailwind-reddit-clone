@@ -6,13 +6,14 @@ import React from 'react'
 import { RightContent } from './RightContent'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { auth } from '@/firebase/clientApp'
+import { Directory } from './Directory'
 
 export const NavBar = () => {
   const [user, loading, error] = useAuthState(auth)
 
   return (
     <header className="flex bg-white h-11 px-3 py-2">
-      <div className="flex items-center">
+      <div className="flex items-center ">
         <Image
           src="/assets/images/redditFace.svg"
           alt="reddit logo"
@@ -27,8 +28,8 @@ export const NavBar = () => {
           className="hidden md:block"
         />
       </div>
-      {/* <Directory /> */}
-      <SearchInput />
+      {user && <Directory />}
+      <SearchInput user={user} />
       <RightContent user={user} />
     </header>
   )
