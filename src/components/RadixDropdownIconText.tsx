@@ -9,7 +9,7 @@ interface IRadixDropdownIconText extends ButtonHTMLAttributes<HTMLButtonElement>
 export const RadixDropdownIconText = ({ separator, children, className, ...props }: IRadixDropdownIconText) => {
   return (
     <>
-      <Item className='hover:outline-0 focus:outline-gray-200'>
+      <Item className='hover:outline-0 focus:outline-gray-200' >
         <button {...props} className={`w-full flex items-center gap-2 text-gray-900 hover:bg-blue-500 hover:text-white ${className}`}>
           {children.map((child) => child)}
         </button>

@@ -1,7 +1,6 @@
 import { AuthButtons } from './AuthButtons'
 import { AuthModal } from '@/components/modals/auth/AuthModal'
-import { User, signOut } from 'firebase/auth'
-import { auth } from '@/firebase/clientApp'
+import { User } from 'firebase/auth'
 import { Icons } from './Icons'
 import { UserMenu } from './UserMenu'
 import { HTMLAttributes } from 'react'

@@ -3,6 +3,7 @@ import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { CgProfile } from 'react-icons/cg';
 import { FiChevronDown } from 'react-icons/fi';
 import { TiHome } from 'react-icons/ti';
+import { Communities } from './Communities';
 
 interface IDirectory extends DropdownMenu.DropdownMenuProps {
 }
@@ -25,8 +26,7 @@ export const Directory = ({ ...props }: IDirectory) => {
       </DropdownMenu.Trigger>
       <DropdownMenu.Portal className='h-fit'>
         <DropdownMenu.Content className='py-2 flex flex-col gap-1 bg-white border border-gray-200 mt-2 rounded-md w-52'>
-          {/* <Communities /> */}
-          Communities
+          <Communities />
           {/* <RadixDropdownIconText className='px-3 py-1 w-full'>
             <CgProfile className='font-medium text-xl' /> <span className='text-xs font-bold'>Profile</span>
           </RadixDropdownIconText> */}

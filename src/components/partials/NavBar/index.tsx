@@ -9,7 +9,7 @@ import { auth } from '@/firebase/clientApp'
 import { Directory } from './Directory'
 
 export const NavBar = () => {
-  const [user, loading, error] = useAuthState(auth)
+  const [user] = useAuthState(auth)
 
   return (
     <header className="flex bg-white h-11 px-3 py-2">
