@@ -1,6 +1,6 @@
 import { Community } from "@/@types/Community"
-import { CommunityHeader } from "@/components/community/CommunityHeader"
 import { CommunityNotFound } from "@/components/community/CommunityNotFound"
+import { JoinButtonHeader } from "@/components/community/JoinButtonHeader"
 import { PageContent } from "@/components/layouts/PageContent"
 import { firestore } from "@/firebase/clientApp"
 import { doc, getDoc } from "firebase/firestore"

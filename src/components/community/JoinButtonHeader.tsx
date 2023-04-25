@@ -1,21 +1,29 @@
 'use client'
 
-import React, { ButtonHTMLAttributes } from 'react'
+import React, { useEffect } from 'react'
 import { Button } from '../Button'
 import { useCommunityStore } from '@/store/community/useCommunityStore'
 import { Community } from '@/@types/Community'
+import { useAuthState } from 'react-firebase-hooks/auth'
+import { auth } from '@/firebase/clientApp'
 
-interface IButton extends ButtonHTMLAttributes<HTMLButtonElement> {
+interface IJoinButtonHeader {
   communityData: Community
 }
 
-export const JoinButtonHeader = ({ communityData, ...props }: IButton) => {
-  const { state: { mySnippets }, actions: { onJoinOrLeaveCommunity } } = useCommunityStore()
+export const JoinButtonHeader = ({ communityData }: IJoinButtonHeader) => {
+  const [user] = useAuthState(auth)
+
+  const { state: { mySnippets }, actions: { onJoinOrLeaveCommunity, getMySnippets } } = useCommunityStore()
   const isJoined = !!mySnippets.find(item => item.communityId === communityData.id)
+
+  useEffect(() => {
+    if (!user) return
+    getMySnippets(user)
+  }, [getMySnippets, user])
 
   return (
     <Button
-      {...props}
       variant={isJoined ? 'outline' : 'solid'}
       className='h-6'
       onClick={() => onJoinOrLeaveCommunity(communityData, isJoined)}

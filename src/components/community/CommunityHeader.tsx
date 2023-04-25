@@ -1,3 +1,5 @@
+'use client'
+
 import { Community } from '@/@types/Community'
 import Image from 'next/image'
 import React, { HTMLAttributes } from 'react'
@@ -27,7 +29,7 @@ export const CommunityHeader = ({ communityData, ...props }: ICommunityHeader) =
               <p className='font-extrabold text-base'>{communityData.id}</p>
               <p className='font-semibold text-xs text-gray-400'>r/{communityData.id}</p>
             </div>
-            <JoinButtonHeader communityData={communityData}/>
+            <JoinButtonHeader communityData={communityData} />
           </div>
         </div>
       </div>
