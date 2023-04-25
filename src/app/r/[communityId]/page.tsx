@@ -1,6 +1,7 @@
 import { Community } from "@/@types/Community"
 import { CommunityHeader } from "@/components/community/CommunityHeader"
 import { CommunityNotFound } from "@/components/community/CommunityNotFound"
+import { PageContent } from "@/components/layouts/PageContent"
 import { firestore } from "@/firebase/clientApp"
 import { doc, getDoc } from "firebase/firestore"
 import safeJsonStringify from 'safe-json-stringify'
@@ -23,11 +24,10 @@ async function getCommunityData(communityId: string) {
 
 export async function generateMetadata({ params }: CommunityIdProps) {
   return {
-    title: `Community | ${params.communityId}`,
+    title: `${params.communityId} | Community`,
+    description: `Posts from ${params.communityId}`
   }
 }
-
-
 
 export default async function CommunityIdPage({ params: { communityId } }: CommunityIdProps) {
   const communityData = await getCommunityData(communityId) as Community
@@ -39,8 +39,13 @@ export default async function CommunityIdPage({ params: { communityId } }: Commu
   }
 
   return (
-    <>
-      <CommunityHeader communityData={communityData}/> 
-    </>
+    <PageContent>
+      <>
+        <p>LHS</p>
+        <p>teste</p>
+      </>
+
+      <>RHS</>
+    </PageContent>
   )
 }

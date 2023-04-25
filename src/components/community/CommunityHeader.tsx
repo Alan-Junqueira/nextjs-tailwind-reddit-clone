@@ -9,7 +9,6 @@ interface ICommunityHeader extends HTMLAttributes<HTMLDivElement> {
 }
 
 export const CommunityHeader = ({ communityData, ...props }: ICommunityHeader) => {
-  const isJoined = false
   return (
     <div {...props} className={`flex- flex-col w-full h-36 ${props.className}`}>
       <div className='h-1/2 bg-blue-400' />
@@ -28,7 +27,7 @@ export const CommunityHeader = ({ communityData, ...props }: ICommunityHeader) =
               <p className='font-extrabold text-base'>{communityData.id}</p>
               <p className='font-semibold text-xs text-gray-400'>r/{communityData.id}</p>
             </div>
-            <JoinButtonHeader isJoined={isJoined} />
+            <JoinButtonHeader communityData={communityData}/>
           </div>
         </div>
       </div>
