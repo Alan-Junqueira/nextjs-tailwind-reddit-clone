@@ -11,7 +11,7 @@ import { z } from 'zod';
 
 import { AiOutlineClose } from 'react-icons/ai'
 import { CheckBox } from './CheckBox';
-import { doc, getDoc, serverTimestamp, setDoc } from 'firebase/firestore';
+import { doc, runTransaction, serverTimestamp } from 'firebase/firestore';
 import { auth, firestore } from '@/firebase/clientApp';
 import { useAuthState } from 'react-firebase-hooks/auth';
 
@@ -48,27 +48,35 @@ export const CreateCommunityModal = ({ ...props }: ICreateCommunityModal) => {
   const handleCreateCommunity = async (data: CommunityFormInputs) => {
     try {
       const { communityName, communityType } = data
-      console.log(data)
 
       //* firestore database instanced --> collection --> id dentro da collection(communityName é único)
       const communityDocRef = doc(firestore, 'communities', communityName)
-      const communityDoc = await getDoc(communityDocRef)
 
-      // ? Check if community exists in db
-      if (communityDoc.exists()) {
-        setError('communityName', { message: `Sorry, r/${communityName} is taken. Try another` })
-        return
-      }
+      await runTransaction(firestore, async (transaction) => {
+        const communityDoc = await transaction.get(communityDocRef)
 
-      //* setDoc --> Create a new document or edit an existing one
-      await setDoc(communityDocRef, {
-        creatorId: user?.uid,
-        createdAt: serverTimestamp(),
-        numberOfMembers: 1,
-        privacyType: communityType
+        // ? Check if community exists in db
+        if (communityDoc.exists()) {
+          setError('communityName', { message: `Sorry, r/${communityName} is taken. Try another` })
+          return
+        }
+
+        //* setDoc --> Create a new document or edit an existing one
+        transaction.set(communityDocRef, {
+          creatorId: user?.uid,
+          createdAt: serverTimestamp(),
+          numberOfMembers: 1,
+          privacyType: communityType
+        })
+
+        // ? Create communitySnippet(sub collection) on user
+        transaction.set(doc(firestore, `users/${user?.uid}/communitySnippets`, communityName), {
+          communityId: communityName,
+          isModerator: true
+        })
+
+        closeButton.current?.click()
       })
-
-      closeButton.current?.click()
     } catch (error: any) {
       console.log('handleCreateCommunity error', error)
       setError('root', error.message)
