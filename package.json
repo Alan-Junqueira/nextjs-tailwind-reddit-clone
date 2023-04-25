@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "firebase-deploy-functions": "firebase deploy --only functions"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.1.0",

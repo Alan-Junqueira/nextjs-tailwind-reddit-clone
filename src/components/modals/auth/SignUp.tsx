@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -8,9 +8,10 @@ import { Button } from '@/components/Button'
 import { useAuthModalStore } from '@/store/modal/useAuthModalStore'
 import { useCreateUserWithEmailAndPassword } from 'react-firebase-hooks/auth'
 import { TextError } from './TextError'
-import Image from 'next/image'
-import { auth } from '@/firebase/clientApp'
+import { auth, firestore } from '@/firebase/clientApp'
 import { FIREBASE_ERRORS } from '@/firebase/errors'
+import { User } from 'firebase/auth'
+import { addDoc, collection } from 'firebase/firestore'
 
 const signUpSchema = z
   .object({
@@ -40,7 +41,7 @@ export const SignUp = () => {
     resolver: zodResolver(signUpSchema),
   })
 
-  const [createUserWithEmailAndPassword, user, loading, firebaseError] =
+  const [createUserWithEmailAndPassword, userCredentials, loading, firebaseError] =
     useCreateUserWithEmailAndPassword(auth)
 
   const handleLoginForm = (data: SignUpInputs) => {
@@ -48,6 +49,16 @@ export const SignUp = () => {
     console.log(data)
     createUserWithEmailAndPassword(email, password)
   }
+
+  const createUserDocument = async (user: User) => {
+    await addDoc(collection(firestore, 'users'), JSON.parse(JSON.stringify(user)))
+  }
+
+  useEffect(() => {
+    if (userCredentials) {
+      createUserDocument(userCredentials.user)
+    }
+  }, [userCredentials])
 
   return (
     <form className="w-full" onSubmit={handleSubmit(handleLoginForm)}>

@@ -1,11 +1,26 @@
 import { Button } from '@/components/Button'
-import { auth } from '@/firebase/clientApp';
+import { auth, firestore } from '@/firebase/clientApp';
 import Image from 'next/image'
 import { useSignInWithGoogle } from "react-firebase-hooks/auth"
 import { TextError } from './TextError';
+import { useEffect } from 'react';
+import { doc, setDoc } from 'firebase/firestore';
+import { User } from 'firebase/auth';
 
 export const OauthButtons = () => {
-  const [signInWithGoogle, user, loading, error] = useSignInWithGoogle(auth);
+  const [signInWithGoogle, userCredentials, loading, error] = useSignInWithGoogle(auth);
+
+
+  const createUserDocument = async (user: User) => {
+    const userDocRef = doc(firestore, 'users', user.uid)
+    await setDoc(userDocRef, JSON.parse(JSON.stringify(user)))
+  }
+
+  useEffect(() => {
+    if (userCredentials) {
+      createUserDocument(userCredentials.user)
+    }
+  }, [userCredentials])
 
   return (
     <div className="flex flex-col gap-2 w-full mb-4">
