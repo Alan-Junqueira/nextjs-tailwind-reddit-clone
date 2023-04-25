@@ -5,9 +5,10 @@ interface IButtonRef extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'solid' | 'outline' | 'oauth'
   size?: 'sm' | 'md'
   children: ReactNode
+  submittingText: string
 }
 
-export const ButtonRef = forwardRef<HTMLButtonElement, IButtonRef>(({ variant, size, children, ...props }, ref) => {
+export const ButtonRef = forwardRef<HTMLButtonElement, IButtonRef>(({ variant, size, submittingText, children, ...props }, ref) => {
   const buttonConfig = {
     sizes: {
       sm: 'text-2',
@@ -38,12 +39,15 @@ export const ButtonRef = forwardRef<HTMLButtonElement, IButtonRef>(({ variant, s
       `}
       ref={ref}
     >
-      {props.disabled ? <Image
-        src="/assets/images/6-dots-rotate.svg"
-        width={20}
-        height={20}
-        alt="carregando"
-      /> : children}
+      {props.disabled ? (<>
+        <Image
+          src="/assets/images/6-dots-rotate.svg"
+          width={20}
+          height={20}
+          alt="carregando"
+        />
+        <span>{submittingText}</span>
+      </>) : children}
     </button>
   )
 }
