@@ -1,4 +1,6 @@
 import { Community } from "@/@types/Community"
+import { CommunityHeader } from "@/components/community/CommunityHeader"
+import { CommunityNotFound } from "@/components/community/CommunityNotFound"
 import { firestore } from "@/firebase/clientApp"
 import { doc, getDoc } from "firebase/firestore"
 import safeJsonStringify from 'safe-json-stringify'
@@ -32,9 +34,13 @@ export default async function CommunityIdPage({ params: { communityId } }: Commu
 
   if (!communityData.id) {
     return (
-      <div>Community does not exists</div>
+      <CommunityNotFound />
     )
   }
 
-  return <h1>welcome to {communityData.id}</h1>
+  return (
+    <>
+      <CommunityHeader communityData={communityData}/> 
+    </>
+  )
 }
