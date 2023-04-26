@@ -10,7 +10,7 @@ export const TabItem = ({ icon, title, selected, setSelectedTab }: ITabItem) => 
     <div
       className={`
         flex items-center justify-center flex-grow gap-2 
-        py-3.5 cursor-pointer
+        py-3.5 cursor-pointer font-bold
         border-r border-r-gray-200
         hover:bg-gray-50
         ${selected ?

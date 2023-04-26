@@ -6,6 +6,10 @@ import { BiPoll } from 'react-icons/bi'
 import { TabItem as TabItemType } from "@/@types/TabItem"
 import { TabItem } from './TabItem'
 import { useState } from 'react'
+import { z } from 'zod'
+import { useForm, FormProvider } from 'react-hook-form'
+import { TextInputs } from './postform/TextInputs'
+import { zodResolver } from '@hookform/resolvers/zod'
 
 const formTabs: TabItemType[] = [
   {
@@ -30,11 +34,28 @@ const formTabs: TabItemType[] = [
   },
 ]
 
+const newPostFormSchema = z.object({
+  title: z.string(),
+  textBody: z.string(),
+  // file: z.string()
+})
+
+export type NewPostFormInputs = z.infer<typeof newPostFormSchema>
+
 export const NewPostForm = () => {
   const [selectedTab, setSelectedTab] = useState<string>(formTabs[0].title);
 
+  const newPostForm = useForm<NewPostFormInputs>({
+    resolver: zodResolver(newPostFormSchema)
+  })
+  const { register, handleSubmit, formState: { errors, isSubmitting }, watch } = newPostForm
+
   const changeSelectedTab = (selectedTab: string) => {
     setSelectedTab(selectedTab);
+  }
+
+  const handleCreatePost = async (data: NewPostFormInputs) => {
+    console.log(data)
   }
 
   return (
@@ -50,6 +71,13 @@ export const NewPostForm = () => {
           />
         ))}
       </div>
+      <form className="flex p-4" onSubmit={handleSubmit(handleCreatePost)}>
+        {selectedTab === 'Post' && (
+          <FormProvider {...newPostForm}>
+            <TextInputs />
+          </FormProvider>
+        )}
+      </form>
     </div>
   )
 }
