@@ -3,6 +3,7 @@ import { firestore } from '@/firebase/clientApp'
 import { User } from 'firebase/auth'
 import { collection, doc, getDocs, increment, writeBatch } from 'firebase/firestore'
 import { create } from 'zustand'
+import { useAuthModalStore } from '../modal/useAuthModalStore'
 
 type CommunitySnippet = {
   communityId: string

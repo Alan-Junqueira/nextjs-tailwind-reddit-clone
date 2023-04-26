@@ -1,5 +1,6 @@
 import { Community } from "@/@types/Community"
 import { CommunityNotFound } from "@/components/community/CommunityNotFound"
+import { CreatePostLink } from "@/components/community/CreatePostLink"
 import { PageContent } from "@/components/layouts/PageContent"
 import { firestore } from "@/firebase/clientApp"
 import { doc, getDoc } from "firebase/firestore"
@@ -40,8 +41,7 @@ export default async function CommunityIdPage({ params: { communityId } }: Commu
   return (
     <PageContent>
       <>
-        <p>LHS</p>
-        <p>teste</p>
+        <CreatePostLink />
       </>
 
       <>RHS</>
