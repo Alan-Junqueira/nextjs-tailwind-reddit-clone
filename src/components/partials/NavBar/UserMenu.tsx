@@ -9,6 +9,7 @@ import { MdOutlineLogin } from 'react-icons/md'
 import { RadixDropdownIconText } from '@/components/RadixDropdownIconText';
 import { auth } from '@/firebase/clientApp';
 import { useAuthModalStore } from '@/store/modal/useAuthModalStore';
+import { useCommunityStore } from '@/store/community/useCommunityStore';
 
 interface IUserMenu extends DropdownMenu.DropdownMenuProps {
   user?: User | null
@@ -16,6 +17,12 @@ interface IUserMenu extends DropdownMenu.DropdownMenuProps {
 
 export const UserMenu = ({ user, ...props }: IUserMenu) => {
   const { actions: { openModal } } = useAuthModalStore()
+  const { actions: { resetSnippets } } = useCommunityStore()
+
+  const handleLogOut = () => {
+    signOut(auth)
+    resetSnippets()
+  }
   return (
     <DropdownMenu.Root {...props}>
       <DropdownMenu.Trigger
@@ -47,7 +54,7 @@ export const UserMenu = ({ user, ...props }: IUserMenu) => {
               <RadixDropdownIconText separator className='px-3 py-1 w-full'>
                 <CgProfile className='font-medium text-xl' /> <span className='text-xs font-bold'>Profile</span>
               </RadixDropdownIconText>
-              <RadixDropdownIconText className='px-3 py-1' onClick={() => signOut(auth)} >
+              <RadixDropdownIconText className='px-3 py-1' onClick={handleLogOut} >
                 <MdOutlineLogin className='font-medium text-xl' /> <span className='text-xs font-bold'>Log Out</span>
               </RadixDropdownIconText>
             </>

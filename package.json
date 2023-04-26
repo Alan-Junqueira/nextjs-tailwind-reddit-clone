@@ -37,6 +37,7 @@
     "@rocketseat/eslint-config": "^1.2.0",
     "@types/safe-json-stringify": "^1.1.2",
     "autoprefixer": "^10.4.14",
+    "encoding": "^0.1.13",
     "eslint": "^8.38.0",
     "postcss": "^8.4.21",
     "tailwindcss": "^3.3.1"

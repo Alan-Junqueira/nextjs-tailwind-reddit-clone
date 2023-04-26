@@ -12,21 +12,25 @@ interface IJoinButtonHeader {
 }
 
 export const JoinButtonHeader = ({ communityData }: IJoinButtonHeader) => {
-  const [user] = useAuthState(auth)
+  const [user, loading, error] = useAuthState(auth)
 
-  const { state: { mySnippets }, actions: { onJoinOrLeaveCommunity, getMySnippets } } = useCommunityStore()
+  const { state: { mySnippets }, actions: { onJoinOrLeaveCommunity, getMySnippets, resetSnippets } } = useCommunityStore()
   const isJoined = !!mySnippets.find(item => item.communityId === communityData.id)
 
   useEffect(() => {
-    if (!user) return
+    if (!user) {
+      resetSnippets()
+      return
+    }
     getMySnippets(user)
-  }, [getMySnippets, user])
+  }, [getMySnippets, resetSnippets, user])
 
   return (
     <Button
       variant={isJoined ? 'outline' : 'solid'}
       className='h-6'
       onClick={() => onJoinOrLeaveCommunity(communityData, isJoined)}
+      disabled={loading}
     >
       {isJoined ? 'Joined' : 'Join'}
     </Button>

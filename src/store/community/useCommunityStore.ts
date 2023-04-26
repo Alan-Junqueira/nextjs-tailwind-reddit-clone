@@ -20,6 +20,7 @@ type CommunityActions = {
   joinCommunity: (communityData: Community) => void
   leaveCommunity: (communityId: string) => void
   onJoinOrLeaveCommunity: (communityData: Community, isJoined: boolean) => void
+  resetSnippets: () => void
 }
 
 interface CommunityStoreProps {
@@ -40,10 +41,19 @@ export const useCommunityStore = create<CommunityStoreProps>((set, get, actions)
 
         const snippets = snippetDocs.docs.map(doc => ({ ...doc.data() }))
 
-        console.log('here are snippets', snippets)
+        set((prev) => ({
+          ...prev,
+          state: { ...prev.state, mySnippets: snippets as CommunitySnippet[] },
+        }))
       } catch (error) {
         console.log('getMySnippets error', error)
       }
+    },
+    resetSnippets: () => {
+      set((prev) => ({
+        ...prev,
+        state: { ...prev.state, mySnippets: [] },
+      }))
     },
     leaveCommunity: (communityId) => { },
     joinCommunity: () => { /* implementação da função */ },
@@ -55,6 +65,6 @@ export const useCommunityStore = create<CommunityStoreProps>((set, get, actions)
       }
 
       get().actions.joinCommunity(communityData)
-    },
+    }
   }
 }))
