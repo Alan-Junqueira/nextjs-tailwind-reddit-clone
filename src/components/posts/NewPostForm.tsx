@@ -5,11 +5,12 @@ import { IoDocumentText, IoImageOutline } from 'react-icons/io5'
 import { BiPoll } from 'react-icons/bi'
 import { TabItem as TabItemType } from "@/@types/TabItem"
 import { TabItem } from './TabItem'
-import { useState } from 'react'
+import { ChangeEvent, useState } from 'react'
 import { z } from 'zod'
 import { useForm, FormProvider } from 'react-hook-form'
 import { TextInputs } from './postform/TextInputs'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { ImageUpload } from './postform/ImageUpload'
 
 const formTabs: TabItemType[] = [
   {
@@ -37,13 +38,13 @@ const formTabs: TabItemType[] = [
 const newPostFormSchema = z.object({
   title: z.string(),
   textBody: z.string(),
-  // file: z.string()
 })
 
 export type NewPostFormInputs = z.infer<typeof newPostFormSchema>
 
 export const NewPostForm = () => {
   const [selectedTab, setSelectedTab] = useState<string>(formTabs[0].title);
+  const [selectedFile, setSelectedFile] = useState('');
 
   const newPostForm = useForm<NewPostFormInputs>({
     resolver: zodResolver(newPostFormSchema)
@@ -54,8 +55,28 @@ export const NewPostForm = () => {
     setSelectedTab(selectedTab);
   }
 
+  const changeSelectedFile = (selectedFile: string) => {
+    setSelectedFile(selectedFile);
+  }
+
   const handleCreatePost = async (data: NewPostFormInputs) => {
     console.log(data)
+  }
+
+  const handleSelectImage = (e: ChangeEvent<HTMLInputElement>) => {
+    const fileReader = new FileReader()
+
+    const firstFile = e.target.files?.[0]
+
+    if (firstFile) {
+      fileReader.readAsDataURL(firstFile)
+    }
+
+    fileReader.onload = (readerEvent) => {
+      if (readerEvent.target?.result) {
+        setSelectedFile(readerEvent.target.result as string)
+      }
+    }
   }
 
   return (
@@ -72,11 +93,19 @@ export const NewPostForm = () => {
         ))}
       </div>
       <form className="flex p-4" onSubmit={handleSubmit(handleCreatePost)}>
-        {selectedTab === 'Post' && (
-          <FormProvider {...newPostForm}>
+        <FormProvider {...newPostForm}>
+          {selectedTab === 'Post' && (
             <TextInputs />
-          </FormProvider>
-        )}
+          )}
+          {selectedTab === 'Images & Video' && (
+            <ImageUpload
+              onSelectImage={handleSelectImage}
+              setSelectedTab={changeSelectedTab}
+              selectedFile={selectedFile}
+              setSelectedFile={changeSelectedFile}
+            />
+          )}
+        </FormProvider>
       </form>
     </div>
   )
