@@ -17,6 +17,7 @@ import { Post } from '@/@types/Post'
 import { Timestamp, addDoc, collection, serverTimestamp, updateDoc } from 'firebase/firestore'
 import { firestore, storage } from '@/firebase/clientApp'
 import { getDownloadURL, ref, uploadString } from 'firebase/storage'
+import { AlertError } from '../AlertError'
 
 const formTabs: TabItemType[] = [
   {
@@ -62,7 +63,7 @@ export const NewPostForm = ({ user, ...props }: INewPostForm) => {
   const newPostForm = useForm<NewPostFormInputs>({
     resolver: zodResolver(newPostFormSchema)
   })
-  const { register, handleSubmit, formState: { errors, isSubmitting }, watch } = newPostForm
+  const { handleSubmit, formState: { errors }, setError } = newPostForm
 
   const changeSelectedTab = (selectedTab: string) => {
     setSelectedTab(selectedTab);
@@ -73,19 +74,20 @@ export const NewPostForm = ({ user, ...props }: INewPostForm) => {
   }
 
   const handleCreatePost = async (data: NewPostFormInputs) => {
-    const { textBody, title } = data
-    const newPost: Post = {
-      communityId: communityId as string,
-      creatorId: user.uid,
-      creatorDisplayName: user.email!.split('@')[0],
-      title,
-      textBody,
-      numberOfComments: 0,
-      voteStatus: 0,
-      createdAt: serverTimestamp() as Timestamp,
-    }
-
     try {
+      setError('root', { message: "" })
+      const { textBody, title } = data
+      const newPost: Post = {
+        communityId: communityId as string,
+        creatorId: user.uid,
+        creatorDisplayName: user.email!.split('@')[0],
+        title,
+        textBody,
+        numberOfComments: 0,
+        voteStatus: 0,
+        createdAt: serverTimestamp() as Timestamp,
+      }
+
       const postDocRef = await addDoc(collection(firestore, 'posts'), newPost)
 
       if (selectedFile) {
@@ -98,10 +100,11 @@ export const NewPostForm = ({ user, ...props }: INewPostForm) => {
           imageUrl: downloadURL
         })
 
-        // router.back()
+        router.back()
       }
     } catch (error: any) {
       console.log('handleCreatePost error', error.message)
+      setError('root', { message: "Error creating post" })
     }
   }
 
@@ -149,6 +152,7 @@ export const NewPostForm = ({ user, ...props }: INewPostForm) => {
           )}
         </FormProvider>
       </form>
+      {errors.root?.message && <AlertError status='error' textLabel={errors.root.message} />}
     </div>
   )
 }
