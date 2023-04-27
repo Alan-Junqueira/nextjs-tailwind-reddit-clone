@@ -1,9 +1,9 @@
 import { Community } from '@/@types/Community'
 import { firestore } from '@/firebase/clientApp'
 import { User } from 'firebase/auth'
-import { collection, doc, getDocs, increment, writeBatch } from 'firebase/firestore'
+import { collection, doc, getDoc, getDocs, increment, writeBatch } from 'firebase/firestore'
 import { create } from 'zustand'
-import { useAuthModalStore } from '../modal/useAuthModalStore'
+import safeJsonStringify from 'safe-json-stringify'
 
 type CommunitySnippet = {
   communityId: string
@@ -13,11 +13,12 @@ type CommunitySnippet = {
 
 type CommunityState = {
   mySnippets: CommunitySnippet[]
-  // visitedCommunities
+  currentCommunity?: Community
 }
 
 type CommunityActions = {
   getMySnippets: (user: any) => void
+  getCurrentCommunity: (communityId: string) => void
   joinCommunity: (communityData: Community, user: User) => void
   leaveCommunity: (communityId: string, user: User) => void
   onJoinOrLeaveCommunity: (communityData: Community, user: any, isJoined: boolean) => void
@@ -49,6 +50,21 @@ export const useCommunityStore = create<CommunityStoreProps>((set, get, actions)
       } catch (error) {
         console.log('getMySnippets error', error)
       }
+    },
+    getCurrentCommunity: async (communityId: string) => {
+      const communityDocRef = doc(firestore, 'communities', communityId)
+      const communityDoc = await getDoc(communityDocRef)
+    
+      const communityData = communityDoc.exists() ? JSON.parse(
+        safeJsonStringify({ id: communityDoc.id, ...communityDoc.data() })) : ''
+
+      set((prev) => ({
+        ...prev,
+        state: {
+          ...prev.state,
+          currentCommunity: communityData
+        }
+      }))
     },
     resetSnippets: () => {
       set((prev) => ({

@@ -30,7 +30,7 @@ export const CreatePostLink = () => {
       <Input
         placeholder='Create Post'
         className='
-          text-xs bg-gray-50 border-gray-200 h-9 rounded border
+          text-xs bg-gray-50 border-gray-200 h-9 rounded border pl-2
           placeholder:text-gray-500
           hover:bg-white hover:border-blue-500
           focus:outline-none focus:bg-white focus:border-blue-500

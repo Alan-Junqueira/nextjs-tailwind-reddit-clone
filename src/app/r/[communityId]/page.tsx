@@ -1,4 +1,5 @@
 import { Community } from "@/@types/Community"
+import { CommunityAbout } from "@/components/community/CommunityAbout"
 import { CommunityNotFound } from "@/components/community/CommunityNotFound"
 import { CreatePostLink } from "@/components/community/CreatePostLink"
 import { PageContent } from "@/components/layouts/PageContent"
@@ -45,8 +46,7 @@ export default async function CommunityIdPage({ params: { communityId } }: Commu
         <CreatePostLink />
         <Posts communityData={communityData} />
       </>
-
-      <>RHS</>
+      <CommunityAbout communityData={communityData} communityId={communityId}/>
     </PageContent>
   )
 }
