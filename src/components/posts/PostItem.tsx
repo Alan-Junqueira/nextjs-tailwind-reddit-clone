@@ -17,6 +17,7 @@ import {
   IoBookmarkOutline,
 } from "react-icons/io5";
 import { ImageSkeleton } from "../skeletons/ImageSkeleton";
+import { AlertError } from "../AlertError";
 
 interface IPostItem extends HTMLAttributes<HTMLDivElement> {
   post: Post;
@@ -24,9 +25,30 @@ interface IPostItem extends HTMLAttributes<HTMLDivElement> {
   userVoteValue?: number
   onVote: () => void
   onSelectPost: () => void
-  onDeletePost: () => void
+  onDeletePost: (post: Post) => Promise<boolean>
 }
 export const PostItem = ({ onDeletePost, onSelectPost, onVote, post, userIsCreator, userVoteValue, ...props }: IPostItem) => {
+  const [deletePostError, setDeletePostError] = useState<string>('');
+  const [isDeletingPost, setIsDeletingPost] = useState(false);
+
+  const handleDeletePost = async () => {
+    deletePostError && setDeletePostError('')
+    try {
+      setIsDeletingPost(true)
+      const success = await onDeletePost(post)
+
+      if (!success) {
+        throw new Error('Failed to delete post')
+      }
+
+      console.log('Post was successfully deleted')
+    } catch (error: any) {
+      setDeletePostError(error.message)
+    } finally {
+      setIsDeletingPost(false)
+    }
+  }
+
   return (
     <div
       {...props}
@@ -50,6 +72,7 @@ export const PostItem = ({ onDeletePost, onSelectPost, onVote, post, userIsCreat
         }
       </div>
       <div className="flex flex-col w-full">
+        {deletePostError && <AlertError status='error' textLabel={deletePostError} />}
         <div className="flex flex-col gap-1 p-2.5">
           <div className="flex gap-0.5 items-center text-xs">
             {/* Home page check */}
@@ -92,10 +115,24 @@ export const PostItem = ({ onDeletePost, onSelectPost, onVote, post, userIsCreat
           {userIsCreator && (
             <div
               className="flex items-center gap-2 py-2 px-2.5 rounded cursor-pointer hover:bg-gray-200"
-              onClick={onDeletePost}
+              onClick={handleDeletePost}
             >
-              <AiOutlineDelete />
-              <span className="text-xs">Delete</span>
+              {isDeletingPost ? (
+                <>
+                  <Image
+                    src="/assets/images/6-dots-rotate.svg"
+                    width={20}
+                    height={20}
+                    alt="carregando"
+                  />
+                  <span className="text-xs">Deleting</span>
+                </>
+              ) : (
+                <>
+                  <AiOutlineDelete />
+                  <span className="text-xs">Delete</span>
+                </>
+              )}
             </div>
           )}
         </div>

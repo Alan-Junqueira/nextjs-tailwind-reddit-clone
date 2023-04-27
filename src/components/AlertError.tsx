@@ -13,7 +13,7 @@ export const AlertError = ({ status, textLabel, ...props }: IAlertError) => {
     <div
       {...props}
       className={`
-        w-full gap-4 p-3 flex items-center 
+        w-full gap-2 p-3 flex items-center 
         ${status === 'error' && 'bg-red-300'}
         ${status === 'success' && 'bg-green-300'}
         ${status === 'warning' && 'bg-orange-200'}
@@ -25,7 +25,7 @@ export const AlertError = ({ status, textLabel, ...props }: IAlertError) => {
       {status === 'success' && <BsCheckCircleFill size={28} className='text-emerald-700' />}
       {status === 'warning' && <MdOutlineError size={28} className='text-orange-600' />}
       {status === 'info' && <BsFillInfoCircleFill size={28} className='text-blue-700' />}
-      {textLabel}
+      <span className='font-medium text-sm'>{textLabel}</span>
     </div>
   )
 }
