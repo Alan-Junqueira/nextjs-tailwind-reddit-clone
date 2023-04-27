@@ -5,7 +5,7 @@ import { IoDocumentText, IoImageOutline } from 'react-icons/io5'
 import { BiPoll } from 'react-icons/bi'
 import { TabItem as TabItemType } from "@/@types/TabItem"
 import { TabItem } from './TabItem'
-import { ChangeEvent, HTMLAttributes, useState } from 'react'
+import {  HTMLAttributes, useState } from 'react'
 import { z } from 'zod'
 import { useForm, FormProvider } from 'react-hook-form'
 import { TextInputs } from './postform/TextInputs'
@@ -18,6 +18,7 @@ import { Timestamp, addDoc, collection, serverTimestamp, updateDoc } from 'fireb
 import { firestore, storage } from '@/firebase/clientApp'
 import { getDownloadURL, ref, uploadString } from 'firebase/storage'
 import { AlertError } from '../AlertError'
+import { useSelectedFile } from '@/hooks/useSelectedFile'
 
 const formTabs: TabItemType[] = [
   {
@@ -55,7 +56,8 @@ interface INewPostForm extends HTMLAttributes<HTMLDivElement> {
 
 export const NewPostForm = ({ user, ...props }: INewPostForm) => {
   const [selectedTab, setSelectedTab] = useState<string>(formTabs[0].title);
-  const [selectedFile, setSelectedFile] = useState('');
+
+  const { changeSelectedFile, handleSelectFile, selectedFile, } = useSelectedFile()
 
   const router = useRouter()
   const { communityId } = useParams()
@@ -67,10 +69,6 @@ export const NewPostForm = ({ user, ...props }: INewPostForm) => {
 
   const changeSelectedTab = (selectedTab: string) => {
     setSelectedTab(selectedTab);
-  }
-
-  const changeSelectedFile = (selectedFile: string) => {
-    setSelectedFile(selectedFile);
   }
 
   const handleCreatePost = async (data: NewPostFormInputs) => {
@@ -108,22 +106,6 @@ export const NewPostForm = ({ user, ...props }: INewPostForm) => {
     }
   }
 
-  const handleSelectImage = (e: ChangeEvent<HTMLInputElement>) => {
-    const fileReader = new FileReader()
-
-    const firstFile = e.target.files?.[0]
-
-    if (firstFile) {
-      fileReader.readAsDataURL(firstFile)
-    }
-
-    fileReader.onload = (readerEvent) => {
-      if (readerEvent.target?.result) {
-        setSelectedFile(readerEvent.target.result as string)
-      }
-    }
-  }
-
   return (
     <div {...props} className={`flex flex-col bg-white rounded mt-2 ${props.className}`}>
       <div className='flex w-full'>
@@ -144,7 +126,7 @@ export const NewPostForm = ({ user, ...props }: INewPostForm) => {
           )}
           {selectedTab === 'Images & Video' && (
             <ImageUpload
-              onSelectImage={handleSelectImage}
+              onSelectImage={handleSelectFile}
               setSelectedTab={changeSelectedTab}
               selectedFile={selectedFile}
               setSelectedFile={changeSelectedFile}

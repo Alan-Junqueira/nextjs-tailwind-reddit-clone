@@ -23,6 +23,7 @@ type CommunityActions = {
   leaveCommunity: (communityId: string, user: User) => void
   onJoinOrLeaveCommunity: (communityData: Community, user: any, isJoined: boolean) => void
   resetSnippets: () => void
+  updateCommunityImageUrl: (image: string) => void
 }
 
 interface CommunityStoreProps {
@@ -51,10 +52,21 @@ export const useCommunityStore = create<CommunityStoreProps>((set, get, actions)
         console.log('getMySnippets error', error)
       }
     },
+    updateCommunityImageUrl: (image: string) => {
+      set((prev) => ({
+        ...prev,
+        state: {
+          ...prev.state,
+          currentCommunity: {
+            ...prev.state.currentCommunity, imageUrl: image
+          } as Community
+        }
+      }))
+    },
     getCurrentCommunity: async (communityId: string) => {
       const communityDocRef = doc(firestore, 'communities', communityId)
       const communityDoc = await getDoc(communityDocRef)
-    
+
       const communityData = communityDoc.exists() ? JSON.parse(
         safeJsonStringify({ id: communityDoc.id, ...communityDoc.data() })) : ''
 
