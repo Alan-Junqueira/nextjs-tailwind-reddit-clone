@@ -7,6 +7,9 @@ module.exports = {
         brand: {
           100: '#FF3C00',
         },
+        down: {
+          100: '#4379FF'
+        }
       },
       keyframes: {
         overlayShow: {
