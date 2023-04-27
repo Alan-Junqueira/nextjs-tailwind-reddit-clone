@@ -8,6 +8,7 @@ import { collection, getDocs, orderBy, query, where } from 'firebase/firestore';
 import { HTMLAttributes, useCallback, useEffect, useState } from 'react'
 import { PostItem } from './PostItem';
 import { useAuthState } from 'react-firebase-hooks/auth';
+import { PostSkeleton } from '../skeletons/PostSkeleton';
 
 interface IPosts extends HTMLAttributes<HTMLDivElement> {
   communityData: Community
@@ -23,6 +24,7 @@ export const Posts = ({ communityData, ...props }: IPosts) => {
   const getPosts = useCallback(
     async () => {
       try {
+        setIsLoading(true)
         const postsQuery = query(
           collection(firestore, 'posts'),
           where('communityId', '==', communityData.id),
@@ -47,18 +49,28 @@ export const Posts = ({ communityData, ...props }: IPosts) => {
   useEffect(() => { getPosts() }, [getPosts])
 
   return (
-    <div {...props} className='flex flex-col gap-2'>
-      {posts.map((post) => (
-        <PostItem
-          post={post}
-          key={post.id}
-          onDeletePost={onDeletePost}
-          onSelectPost={onSelectPost}
-          onVote={onVote}
-          userIsCreator={user?.uid === post.creatorId}
-          userVoteValue={undefined}
-        />
-      ))}
-    </div>
+    <>
+      {isLoading || !user ? (
+        <div {...props} className='flex flex-col gap-3'>
+          <PostSkeleton />
+          <PostSkeleton />
+        </div>
+      ) : (
+
+        <div {...props} className='flex flex-col gap-3'>
+          {posts.map((post) => (
+            <PostItem
+            key={post.id}
+              post={post}
+              onDeletePost={onDeletePost}
+              onSelectPost={onSelectPost}
+              onVote={onVote}
+              userIsCreator={user?.uid === post.creatorId}
+              userVoteValue={undefined}
+            />
+          ))}
+        </div >
+      )}
+    </>
   )
 }

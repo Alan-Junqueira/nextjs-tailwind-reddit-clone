@@ -3,7 +3,7 @@
 import { Post } from "@/@types/Post"
 import moment from "moment";
 import Image from "next/image";
-import { HTMLAttributes } from "react"
+import { HTMLAttributes, Suspense, useState } from "react"
 
 import { AiOutlineDelete } from "react-icons/ai";
 import { BsChat, BsDot } from "react-icons/bs";
@@ -16,6 +16,7 @@ import {
   IoArrowUpCircleSharp,
   IoBookmarkOutline,
 } from "react-icons/io5";
+import { ImageSkeleton } from "../skeletons/ImageSkeleton";
 
 interface IPostItem extends HTMLAttributes<HTMLDivElement> {
   post: Post;
@@ -62,7 +63,16 @@ export const PostItem = ({ onDeletePost, onSelectPost, onVote, post, userIsCreat
           </p>
           {post.imageUrl && (
             <div className="flex items-center justify-center p-2">
-              <Image src={post.imageUrl} width={400} height={460} alt="Post Image" priority className="w-full h-auto" />
+              <Suspense fallback={<ImageSkeleton />}>
+                <Image
+                  src={post.imageUrl}
+                  width={400}
+                  height={460}
+                  alt="Post Image"
+                  priority
+                  className="w-full h-auto"
+                />
+              </Suspense>
             </div>
           )}
         </div>
