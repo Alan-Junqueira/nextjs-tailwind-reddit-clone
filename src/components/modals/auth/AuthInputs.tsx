@@ -9,8 +9,6 @@ export const AuthInputs = () => {
     actions: { closeModal },
   } = useAuthModalStore()
 
-  console.log(view)
-
   return (
     <div className="flex items-center flex-col w-full mt-4">
       {view === 'login' && <Login />}

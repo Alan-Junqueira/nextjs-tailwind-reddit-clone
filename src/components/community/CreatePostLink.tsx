@@ -15,9 +15,6 @@ export const CreatePostLink = () => {
   const [user] = useAuthState(auth)
   const { actions: { openModal } } = useAuthModalStore()
 
-  console.log(communityId)
-
-
   const handleInputClick = () => {
     if (!user) {
       openModal('login')

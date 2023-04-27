@@ -46,7 +46,6 @@ export const SignUp = () => {
 
   const handleLoginForm = (data: SignUpInputs) => {
     const { email, password } = data
-    console.log(data)
     createUserWithEmailAndPassword(email, password)
   }
 

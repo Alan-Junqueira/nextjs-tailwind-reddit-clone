@@ -18,7 +18,6 @@ export const ImageUpload = ({ onSelectImage, setSelectedFile, setSelectedTab, se
     document.getElementById('file-input')?.click()
   }
 
-  console.log(selectedFile)
   return (
     <div className='flex items-center justify-center flex-col w-full'>
       {selectedFile ? (
