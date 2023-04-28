@@ -1,23 +1,26 @@
-import { Community } from '@/@types/Community'
 import { firestore, storage } from '@/firebase/clientApp'
 import { User } from 'firebase/auth'
-import { collection, deleteDoc, doc, getDocs, increment, writeBatch } from 'firebase/firestore'
+import { collection, deleteDoc, doc, getDocs, query, where, writeBatch } from 'firebase/firestore'
 import { create } from 'zustand'
-import { useAuthModalStore } from '../modal/useAuthModalStore'
 import { Post } from '@/@types/Post'
 import { deleteObject, ref } from 'firebase/storage'
+import { PostVote } from '@/@types/PostVote'
+
 
 
 type PostsState = {
   selectedPost: Post | null
   posts: Post[]
+  postVotes: PostVote[]
 }
 
 type PostsActions = {
   getPostsStore: (posts: Post[]) => void
-  onVote: () => void
+  onVote: (post: Post, vote: number, communityId: string, user: User) => void
   onSelectPost: () => void
   onDeletePost: (post: Post) => Promise<boolean>
+  getCommunityPostsVotesStore: (communityId: string, user: User) => void
+  clearPostVotesStore: () => void
 }
 
 interface PostsStoreProps {
@@ -28,7 +31,8 @@ interface PostsStoreProps {
 export const usePostsStore = create<PostsStoreProps>((set, get, actions) => ({
   state: {
     selectedPost: null,
-    posts: []
+    posts: [],
+    postVotes: []
   },
   actions: {
     getPostsStore: (posts: Post[]) => {
@@ -37,6 +41,25 @@ export const usePostsStore = create<PostsStoreProps>((set, get, actions) => ({
         state: {
           ...prev.state,
           posts
+        }
+      }))
+    },
+    getCommunityPostsVotesStore: async (communityId: string, user: User) => {
+      if (!communityId) return
+      const postVotesQuery = query(
+        collection(firestore, 'users', `${user.uid}/postVotes`),
+        where('communityId', '==', communityId))
+
+      const postVotesDocs = await getDocs(postVotesQuery)
+      const postVotes = postVotesDocs.docs.map(doc => ({
+        id: doc.id, ...doc.data()
+      }))
+
+      set((prev) => ({
+        ...prev,
+        state: {
+          ...prev.state,
+          postVotes: postVotes as PostVote[]
         }
       }))
     },
@@ -70,8 +93,110 @@ export const usePostsStore = create<PostsStoreProps>((set, get, actions) => ({
     onSelectPost: () => {
 
     },
-    onVote: () => {
+    onVote: async (post: Post, vote: number, communityId: string, user: User) => {
+      // ? Check for a user => if not, open auth modal
 
+      try {
+        const { voteStatus } = post
+        const existingVote = get().state.postVotes.find(vote => vote.postId === post.id)
+
+        console.log(existingVote)
+
+        const batch = writeBatch(firestore)
+        const updatedPost: Post = { ...post }
+        const updatedPosts = [...get().state.posts]
+        let updatedPostVotes: PostVote[] = [...get().state.postVotes]
+        let voteChange = vote
+
+        // * New Vote
+        if (!existingVote) {
+          // ? Create a new postVote document
+          const postVoteRef = doc(collection(firestore, 'users', `${user.uid}/postVotes`))
+
+          const newVote: PostVote = {
+            id: postVoteRef.id,
+            postId: post.id!,
+            communityId,
+            voteValue: vote
+          }
+
+          batch.set(postVoteRef, newVote)
+
+          // ? Add/subtract 1 to/from post.voteStatus
+          updatedPost.voteStatus = voteStatus + vote
+          // eslint-disable-next-line no-unused-vars
+          updatedPostVotes = [...updatedPostVotes, newVote]
+
+          // ? existing vote - They have vote on the post before
+        } else {
+          const postVoteRef = doc(firestore, 'users', `${user.uid}/postVotes/${existingVote.id}`)
+
+          // ? Removing their vote (up => neutral OR down => neutral)
+          if (existingVote.voteValue === vote) {
+            // ? Add/Subtract 1 to/from post.voteStatus
+            updatedPost.voteStatus = voteStatus - vote
+            // eslint-disable-next-line no-unused-vars
+            updatedPostVotes = updatedPostVotes.filter(vote => vote.id !== existingVote.id)
+
+            // ? delete the post document
+            batch.delete(postVoteRef)
+
+            // eslint-disable-next-line no-unused-vars
+            voteChange *= -1;
+            // ? Flipping their vote (up => down OR down => up)
+          } else {
+            // ? Add/Subtract 2 to/from post.voteStatus
+            updatedPost.voteStatus = voteStatus + 2 * vote
+
+            const voteIndex = get().state.postVotes.findIndex(vote => vote.id === existingVote.id)
+
+            updatedPostVotes[voteIndex] = {
+              ...existingVote,
+              voteValue: vote
+            }
+
+            // ? Updating the existing postVote document
+            batch.update(postVoteRef, {
+              voteValue: vote
+            })
+
+            // eslint-disable-next-line no-unused-vars
+            voteChange = 2 * vote
+          }
+        }
+
+        // ? Update post document
+        const postRef = doc(firestore, 'posts', post.id!)
+        batch.update(postRef, { voteStatus: voteStatus + voteChange })
+
+        await batch.commit()
+
+        // ? Update state with updated values
+        const postIndex = get().state.posts.findIndex(item => item.id === post.id)
+        updatedPosts[postIndex] = updatedPost
+
+        set((prev) => ({
+          ...prev,
+          state: {
+            ...prev.state,
+            posts: updatedPosts,
+            postVotes: updatedPostVotes
+          }
+        }))
+
+      } catch (error) {
+        console.log('onVote error', error)
+      }
+
+    },
+    clearPostVotesStore: () => {
+      set((prev) => ({
+        ...prev,
+        state: {
+          ...prev.state,
+          postVotes: []
+        }
+      }))
     }
   }
 }))

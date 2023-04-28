@@ -18,7 +18,6 @@ import { useCommunityStore } from '@/store/community/useCommunityStore'
 
 interface ICommunityAbout extends HTMLAttributes<HTMLDivElement> {
   communityData: Community
-  communityId: string
 }
 
 export const CommunityAbout = ({ communityData, ...props }: ICommunityAbout) => {

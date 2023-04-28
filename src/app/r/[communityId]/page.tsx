@@ -46,7 +46,7 @@ export default async function CommunityIdPage({ params: { communityId } }: Commu
         <CreatePostLink />
         <Posts communityData={communityData} />
       </>
-      <CommunityAbout communityData={communityData} communityId={communityId}/>
+      <CommunityAbout communityData={communityData} />
     </PageContent>
   )
 }

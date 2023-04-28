@@ -10,6 +10,7 @@ import { RadixDropdownIconText } from '@/components/RadixDropdownIconText';
 import { auth } from '@/firebase/clientApp';
 import { useAuthModalStore } from '@/store/modal/useAuthModalStore';
 import { useCommunityStore } from '@/store/community/useCommunityStore';
+import { usePostsStore } from '@/store/post/usePostsStore';
 
 interface IUserMenu extends DropdownMenu.DropdownMenuProps {
   user?: User | null
@@ -18,10 +19,12 @@ interface IUserMenu extends DropdownMenu.DropdownMenuProps {
 export const UserMenu = ({ user, ...props }: IUserMenu) => {
   const { actions: { openModal } } = useAuthModalStore()
   const { actions: { resetSnippets } } = useCommunityStore()
+  const { actions: { clearPostVotesStore } } = usePostsStore()
 
   const handleLogOut = () => {
     signOut(auth)
     resetSnippets()
+    clearPostVotesStore()
   }
   return (
     <DropdownMenu.Root {...props}>

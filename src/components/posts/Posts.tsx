@@ -19,7 +19,7 @@ export const Posts = ({ communityData, ...props }: IPosts) => {
 
   const [user] = useAuthState(auth)
 
-  const { actions: { getPostsStore, onDeletePost, onSelectPost, onVote }, state: { posts } } = usePostsStore()
+  const { actions: { getPostsStore, onDeletePost, onSelectPost, onVote, getCommunityPostsVotesStore }, state: { posts, postVotes } } = usePostsStore()
 
   const getPosts = useCallback(
     async () => {
@@ -46,11 +46,16 @@ export const Posts = ({ communityData, ...props }: IPosts) => {
     [communityData.id, getPostsStore]
   )
 
-  useEffect(() => { getPosts() }, [getPosts])
+  useEffect(() => {
+    getPosts()
+    if (user) {
+      getCommunityPostsVotesStore(communityData.id, user)
+    }
+  }, [communityData.id, getCommunityPostsVotesStore, getPosts, user])
 
   return (
     <>
-      {isLoading || !user ? (
+      {isLoading  ? (
         <div {...props} className='flex flex-col gap-3'>
           <PostSkeleton />
           <PostSkeleton />
@@ -60,13 +65,14 @@ export const Posts = ({ communityData, ...props }: IPosts) => {
         <div {...props} className='flex flex-col gap-3'>
           {posts.map((post) => (
             <PostItem
-            key={post.id}
+              key={post.id}
               post={post}
               onDeletePost={onDeletePost}
               onSelectPost={onSelectPost}
               onVote={onVote}
               userIsCreator={user?.uid === post.creatorId}
-              userVoteValue={undefined}
+              userVoteValue={postVotes.find(vote => vote.postId === post.id)?.voteValue}
+              user={user}
             />
           ))}
         </div >

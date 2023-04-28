@@ -2,11 +2,11 @@
 
 import { SearchInput } from '@/components/SearchInput'
 import Image from 'next/image'
-import React from 'react'
 import { RightContent } from './RightContent'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { auth } from '@/firebase/clientApp'
 import { Directory } from './Directory'
+
 
 export const NavBar = () => {
   const [user] = useAuthState(auth)

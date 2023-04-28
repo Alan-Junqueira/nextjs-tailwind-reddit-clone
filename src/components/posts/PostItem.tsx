@@ -6,8 +6,7 @@ import Image from "next/image";
 import { HTMLAttributes, Suspense, useState } from "react"
 
 import { AiOutlineDelete } from "react-icons/ai";
-import { BsChat, BsDot } from "react-icons/bs";
-import { FaReddit } from "react-icons/fa";
+import { BsChat } from "react-icons/bs";
 import {
   IoArrowDownCircleOutline,
   IoArrowDownCircleSharp,
@@ -18,18 +17,23 @@ import {
 } from "react-icons/io5";
 import { ImageSkeleton } from "../skeletons/ImageSkeleton";
 import { AlertError } from "../AlertError";
+import { User } from "firebase/auth";
+import { useAuthModalStore } from "@/store/modal/useAuthModalStore";
 
 interface IPostItem extends HTMLAttributes<HTMLDivElement> {
   post: Post;
   userIsCreator: boolean
   userVoteValue?: number
-  onVote: () => void
+  onVote: (post: Post, vote: number, communityId: string, user: User) => void
   onSelectPost: () => void
   onDeletePost: (post: Post) => Promise<boolean>
+  user?: User | null
 }
-export const PostItem = ({ onDeletePost, onSelectPost, onVote, post, userIsCreator, userVoteValue, ...props }: IPostItem) => {
+export const PostItem = ({ onDeletePost, onSelectPost, onVote, post, userIsCreator, userVoteValue, user, ...props }: IPostItem) => {
   const [deletePostError, setDeletePostError] = useState<string>('');
   const [isDeletingPost, setIsDeletingPost] = useState(false);
+
+  const { actions: { openModal } } = useAuthModalStore()
 
   const handleDeletePost = async () => {
     deletePostError && setDeletePostError('')
@@ -49,6 +53,23 @@ export const PostItem = ({ onDeletePost, onSelectPost, onVote, post, userIsCreat
     }
   }
 
+  const handleMinusVote = () => {
+    if (!user) {
+      openModal('login')
+      return
+    }
+    onVote(post, -1, post.communityId, user)
+  }
+
+  const handlePlusVote = () => {
+    if (!user) {
+      openModal('login')
+      return
+    }
+
+    onVote(post, 1, post.communityId, user)
+  }
+
   return (
     <div
       {...props}
@@ -62,13 +83,28 @@ export const PostItem = ({ onDeletePost, onSelectPost, onVote, post, userIsCreat
     >
       <div className="flex flex-col items-center bg-gray-100 p-2 w-10 rounded">
         {userVoteValue === 1 ?
-          <IoArrowUpCircleSharp size={22} className="text-brand-100 cursor-pointer" onClick={onVote} /> :
-          <IoArrowUpCircleOutline size={22} className="text-gray-400 cursor-pointer hover:text-brand-100" onClick={onVote} />
+          <IoArrowUpCircleSharp
+            size={22}
+            className="text-brand-100 cursor-pointer"
+            onClick={handlePlusVote}
+          /> :
+          <IoArrowUpCircleOutline
+            size={22}
+            className="text-gray-400 cursor-pointer hover:text-brand-100"
+            onClick={handlePlusVote}
+          />
         }
         <span className="text-xs">{post.voteStatus}</span>
         {userVoteValue === -1 ?
-          <IoArrowDownCircleSharp size={22} className="text-down-100 cursor-pointer" onClick={onVote} /> :
-          <IoArrowDownCircleOutline size={22} className="text-gray-400 cursor-pointer hover:text-down-100" onClick={onVote} />
+          <IoArrowDownCircleSharp
+            size={22}
+            className="text-down-100 cursor-pointer"
+            onClick={handleMinusVote} /> :
+          <IoArrowDownCircleOutline
+            size={22}
+            className="text-gray-400 cursor-pointer hover:text-down-100"
+            onClick={handleMinusVote}
+          />
         }
       </div>
       <div className="flex flex-col w-full">
