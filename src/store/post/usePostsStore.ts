@@ -17,7 +17,7 @@ type PostsState = {
 type PostsActions = {
   getPostsStore: (posts: Post[]) => void
   onVote: (post: Post, vote: number, communityId: string, user: User) => void
-  onSelectPost: () => void
+  onSelectPost: (post: Post) => void
   onDeletePost: (post: Post) => Promise<boolean>
   getCommunityPostsVotesStore: (communityId: string, user: User) => void
   clearPostVotesStore: () => void
@@ -90,8 +90,14 @@ export const usePostsStore = create<PostsStoreProps>((set, get, actions) => ({
         return false
       }
     },
-    onSelectPost: () => {
-
+    onSelectPost: (post: Post) => {
+      set(prev => ({
+        ...prev,
+        state: {
+          ...prev.state,
+          selectedPost: post
+        }
+      }))
     },
     onVote: async (post: Post, vote: number, communityId: string, user: User) => {
       // ? Check for a user => if not, open auth modal
@@ -183,6 +189,16 @@ export const usePostsStore = create<PostsStoreProps>((set, get, actions) => ({
             postVotes: updatedPostVotes
           }
         }))
+
+        if(get().state.selectedPost) {
+          set((prev) => ({
+            ...prev,
+            state: {
+              ...prev.state,
+              selectedPost: updatedPost
+            }
+          }))
+        }
 
       } catch (error) {
         console.log('onVote error', error)

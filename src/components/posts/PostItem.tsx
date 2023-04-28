@@ -3,7 +3,7 @@
 import { Post } from "@/@types/Post"
 import moment from "moment";
 import Image from "next/image";
-import { HTMLAttributes, Suspense, useState } from "react"
+import { HTMLAttributes, MouseEvent, Suspense, useState } from "react"
 
 import { AiOutlineDelete } from "react-icons/ai";
 import { BsChat } from "react-icons/bs";
@@ -19,13 +19,14 @@ import { ImageSkeleton } from "../skeletons/ImageSkeleton";
 import { AlertError } from "../AlertError";
 import { User } from "firebase/auth";
 import { useAuthModalStore } from "@/store/modal/useAuthModalStore";
+import { useRouter } from "next/navigation";
 
 interface IPostItem extends HTMLAttributes<HTMLDivElement> {
   post: Post;
   userIsCreator: boolean
   userVoteValue?: number
   onVote: (post: Post, vote: number, communityId: string, user: User) => void
-  onSelectPost: () => void
+  onSelectPost?: (post: Post) => void
   onDeletePost: (post: Post) => Promise<boolean>
   user?: User | null
 }
@@ -33,9 +34,14 @@ export const PostItem = ({ onDeletePost, onSelectPost, onVote, post, userIsCreat
   const [deletePostError, setDeletePostError] = useState<string>('');
   const [isDeletingPost, setIsDeletingPost] = useState(false);
 
+  const router = useRouter()
+
   const { actions: { openModal } } = useAuthModalStore()
 
-  const handleDeletePost = async () => {
+  const singlePostPage = !onSelectPost
+
+  const handleDeletePost = async (e: MouseEvent<HTMLDivElement, globalThis.MouseEvent>) => {
+    e.stopPropagation()
     deletePostError && setDeletePostError('')
     try {
       setIsDeletingPost(true)
@@ -46,6 +52,9 @@ export const PostItem = ({ onDeletePost, onSelectPost, onVote, post, userIsCreat
       }
 
       console.log('Post was successfully deleted')
+      if(singlePostPage){
+        router.push(`/r/${post.communityId}`)
+      }
     } catch (error: any) {
       setDeletePostError(error.message)
     } finally {
@@ -53,7 +62,9 @@ export const PostItem = ({ onDeletePost, onSelectPost, onVote, post, userIsCreat
     }
   }
 
-  const handleMinusVote = () => {
+  const handleMinusVote = (e: MouseEvent<SVGElement, globalThis.MouseEvent>) => {
+    e.stopPropagation()
+
     if (!user) {
       openModal('login')
       return
@@ -61,7 +72,8 @@ export const PostItem = ({ onDeletePost, onSelectPost, onVote, post, userIsCreat
     onVote(post, -1, post.communityId, user)
   }
 
-  const handlePlusVote = () => {
+  const handlePlusVote = (e: MouseEvent<SVGElement, globalThis.MouseEvent>) => {
+    e.stopPropagation()
     if (!user) {
       openModal('login')
       return
@@ -70,18 +82,37 @@ export const PostItem = ({ onDeletePost, onSelectPost, onVote, post, userIsCreat
     onVote(post, 1, post.communityId, user)
   }
 
+  const handleSectPost = () => {
+    if (onSelectPost) {
+      onSelectPost(post)
+      router.push(`/r/${post.communityId}/comments/${post.id}`)
+    }
+  }
+
   return (
     <div
       {...props}
       className={
-        `flex border border-gray-300 rounded bg-white
-        cursor-pointer
-        hover:border-gray-500
+        `flex border 
+        ${singlePostPage ?
+          'border-white rounded-tl rounded-tr'
+          :
+          'border-gray-300 rounded hover:border-gray-500 cursor-pointer'
+        } 
+        bg-white
         ${props.className}
       `}
-      onClick={onSelectPost}
+      onClick={handleSectPost}
     >
-      <div className="flex flex-col items-center bg-gray-100 p-2 w-10 rounded">
+      <div className={
+        `flex flex-col items-center
+         ${singlePostPage ?
+          'bg-none'
+          :
+          'bg-gray-100 rounded-tl rounded-bl'
+        } 
+         p-2 w-10`
+      }>
         {userVoteValue === 1 ?
           <IoArrowUpCircleSharp
             size={22}
