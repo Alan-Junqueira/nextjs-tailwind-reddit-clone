@@ -29,8 +29,9 @@ interface IComments extends HTMLAttributes<HTMLDivElement> {
 
 export const Comments = ({ communityId, selectedPost, user, ...props }: IComments) => {
   const [postComments, setPostComments] = useState<Comment[]>([]);
-  const [isDeletingComment, setIsDeletingComment] = useState(false);
   const [isFetchingComments, setIsFetchingComments] = useState(false);
+
+  const [commentDeletingId, setCommentDeletingId] = useState('');
 
   const { actions: { updatePostComments } } = usePostsStore()
 
@@ -88,10 +89,31 @@ export const Comments = ({ communityId, selectedPost, user, ...props }: IComment
   }
 
   const handleDeleteComment = async (comment: Comment) => {
-    // ? Delete a comment document
-    // ? update post numberOfComments + 1
+    try {
+      setCommentDeletingId(comment.id)
+      const batch = writeBatch(firestore)
 
-    // ? update client state
+      // ? Delete a comment document
+      const commentDocRef = doc(firestore, 'comments', comment.id)
+      batch.delete(commentDocRef)
+
+      // ? update post numberOfComments - 1
+      const postDocRef = doc(firestore, 'posts', selectedPost?.id!)
+      batch.update(postDocRef, {
+        numberOfComments: increment(-1)
+      })
+
+      await batch.commit()
+
+      // ? update client state
+      setPostComments(prev => prev.filter(item => item.id !== comment.id))
+      updatePostComments(-1)
+
+    } catch (error) {
+      console.log('handleDeleteComment error', error)
+    } finally {
+      setCommentDeletingId('')
+    }
   }
 
   const getPostComments = useCallback(
@@ -154,7 +176,7 @@ export const Comments = ({ communityId, selectedPost, user, ...props }: IComment
                 key={comment.id}
                 comment={comment}
                 handleDeleteComment={handleDeleteComment}
-                isDeleting={isDeletingComment}
+                isDeleting={commentDeletingId === comment.id}
                 userId={user?.uid}
               />
             ))
