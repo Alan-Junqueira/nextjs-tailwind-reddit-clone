@@ -1,17 +1,19 @@
 import { Post } from '@/@types/Post'
 import { User } from 'firebase/auth'
-import React, { HTMLAttributes, useEffect, useState } from 'react'
+import React, { HTMLAttributes, Suspense, useCallback, useEffect, useState } from 'react'
 import { useForm, FormProvider } from 'react-hook-form'
 import { CommentInput } from './CommentInput'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { auth, firestore } from '@/firebase/clientApp'
-import { Timestamp, collection, doc, increment, serverTimestamp, writeBatch } from 'firebase/firestore'
+import { Timestamp, collection, doc, getDocs, increment, orderBy, query, serverTimestamp, where, writeBatch } from 'firebase/firestore'
 import { Comment } from '@/@types/Comment'
 import { useAuthModalStore } from '@/store/modal/useAuthModalStore'
 import { getUserFromEmail } from '@/utils/get-user-from-email'
 import { usePostsStore } from '@/store/post/usePostsStore'
+import { CommentItem } from './CommentItem'
+import { CommentsSkeleton } from '@/components/skeletons/CommentsSkeleton'
 
 const commentFormSchema = z.object({
   comment: z.string()
@@ -27,6 +29,9 @@ interface IComments extends HTMLAttributes<HTMLDivElement> {
 
 export const Comments = ({ communityId, selectedPost, user, ...props }: IComments) => {
   const [postComments, setPostComments] = useState<Comment[]>([]);
+  const [isDeletingComment, setIsDeletingComment] = useState(false);
+  const [isFetchingComments, setIsFetchingComments] = useState(false);
+
   const { actions: { updatePostComments } } = usePostsStore()
 
   const { actions: { openModal } } = useAuthModalStore()
@@ -62,6 +67,8 @@ export const Comments = ({ communityId, selectedPost, user, ...props }: IComment
 
       batch.set(commentDocRef, newComment)
 
+      newComment.createdAt = { seconds: Date.now() / 1000 } as Timestamp
+
       // ? update post numberOfComments + 1
       const postDocRef = doc(firestore, 'posts', selectedPost?.id!)
       batch.update(postDocRef, {
@@ -87,11 +94,35 @@ export const Comments = ({ communityId, selectedPost, user, ...props }: IComment
     // ? update client state
   }
 
-  const getPostComments = async () => { }
+  const getPostComments = useCallback(
+    async () => {
+      if (!selectedPost) return
+      try {
+        setIsFetchingComments(true)
+        const commentsQuery = query(collection(firestore, 'comments'),
+          where('postId', '==', selectedPost.id),
+          orderBy('createdAt', 'desc')
+        )
+
+        const commentDocs = await getDocs(commentsQuery)
+        const comments = commentDocs.docs.map(doc => ({
+          id: doc.id, ...doc.data()
+        }))
+
+        setPostComments(comments as Comment[])
+
+      } catch (error) {
+        console.log('getPostComments error', error)
+      } finally {
+        setIsFetchingComments(false)
+      }
+    },
+    [selectedPost]
+  )
 
   useEffect(() => {
     getPostComments()
-  })
+  }, [getPostComments])
 
   return (
     <div
@@ -101,10 +132,35 @@ export const Comments = ({ communityId, selectedPost, user, ...props }: IComment
         ${props.className}
         `}>
       <form className="flex flex-col pl-2.5 pr-4 mb-6 text-xs w-full" onSubmit={handleSubmit(handleCreateComment)}>
-        <FormProvider {...commentForm}>
-          <CommentInput user={user} />
-        </FormProvider>
+        {!isFetchingComments && (
+          <FormProvider {...commentForm}>
+            <CommentInput user={user} />
+          </FormProvider>
+        )}
       </form>
+      <div className="flex flex-col gap-6 p-2">
+        {isFetchingComments ? (
+          [1, 2, 3].map(item => <CommentsSkeleton key={item} />)
+        ) : (
+          postComments.length === 0 ? (
+            <>
+              <div className="flex flex-col justify-center items-center border-t border-t-gray-100 p-20">
+                <p className='font-bold opacity-30'>No Comments yet</p>
+              </div>
+            </>
+          ) : (
+            postComments.map(comment => (
+              <CommentItem
+                key={comment.id}
+                comment={comment}
+                handleDeleteComment={handleDeleteComment}
+                isDeleting={isDeletingComment}
+                userId={user?.uid}
+              />
+            ))
+          )
+        )}
+      </div>
     </div>
   )
 }
