@@ -6,8 +6,6 @@ import { Post } from '@/@types/Post'
 import { deleteObject, ref } from 'firebase/storage'
 import { PostVote } from '@/@types/PostVote'
 
-
-
 type PostsState = {
   selectedPost: Post | null
   posts: Post[]
@@ -21,6 +19,7 @@ type PostsActions = {
   onDeletePost: (post: Post) => Promise<boolean>
   getCommunityPostsVotesStore: (communityId: string, user: User) => void
   clearPostVotesStore: () => void
+  getCommunityPostVoteStore: (user: any, postId: string) => void
 }
 
 interface PostsStoreProps {
@@ -60,6 +59,25 @@ export const usePostsStore = create<PostsStoreProps>((set, get, actions) => ({
         state: {
           ...prev.state,
           postVotes: postVotes as PostVote[]
+        }
+      }))
+    },
+    getCommunityPostVoteStore: async (user: User, postId: string) => {
+      const postVotesCollectionRef = collection(firestore, 'users', user.uid, 'postVotes');
+      const postVotesQuery = query(postVotesCollectionRef, where('postId', '==', postId));
+      const postVotesResult = await getDocs(postVotesQuery);
+
+      const postVote: PostVote[] = []
+
+      postVotesResult.forEach((doc) => {
+        postVote.push(doc.data() as PostVote);
+      });
+
+      set(prev => ({
+        ...prev,
+        state: {
+          ...prev.state,
+          postVotes: postVote
         }
       }))
     },
@@ -190,7 +208,7 @@ export const usePostsStore = create<PostsStoreProps>((set, get, actions) => ({
           }
         }))
 
-        if(get().state.selectedPost) {
+        if (get().state.selectedPost) {
           set((prev) => ({
             ...prev,
             state: {

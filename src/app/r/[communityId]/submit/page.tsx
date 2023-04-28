@@ -1,5 +1,6 @@
 'use client'
 
+import { CommunityAbout } from "@/components/community/CommunityAbout";
 import { PageContent } from "@/components/layouts/PageContent";
 import { NewPostForm } from "@/components/posts/NewPostForm";
 import { auth } from "@/firebase/clientApp";
@@ -13,12 +14,11 @@ export default function CommunityIdSubmitPage() {
   const { communityId } = useParams()
 
   const { actions: { getCurrentCommunity }, state: { currentCommunity } } = useCommunityStore()
-  console.log(currentCommunity)
 
   useEffect(() => {
     getCurrentCommunity(communityId)
-  },[communityId, getCurrentCommunity])
-  
+  }, [communityId, getCurrentCommunity])
+
   return (
     <PageContent>
       <>
@@ -28,7 +28,9 @@ export default function CommunityIdSubmitPage() {
         {user && <NewPostForm user={user} />}
       </>
       <>
-        {/* <CommunityAbout /> */}
+        {currentCommunity &&
+          <CommunityAbout communityData={currentCommunity} />
+        }
       </>
     </PageContent>
   )
