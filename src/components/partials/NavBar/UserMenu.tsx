@@ -11,6 +11,7 @@ import { auth } from '@/firebase/clientApp';
 import { useAuthModalStore } from '@/store/modal/useAuthModalStore';
 import { useCommunityStore } from '@/store/community/useCommunityStore';
 import { usePostsStore } from '@/store/post/usePostsStore';
+import { getUserFromEmail } from '@/utils/get-user-from-email';
 
 interface IUserMenu extends DropdownMenu.DropdownMenuProps {
   user?: User | null
@@ -38,7 +39,7 @@ export const UserMenu = ({ user, ...props }: IUserMenu) => {
           <>
             <FaRedditSquare size={24} className='text-gray-300' />
             <div className='hidden flex-col lg:flex text-[8px] items-center mr-2'>
-              <p className='font-bold'>{user.displayName || user.email?.split("@")[0]}</p>
+              <p className='font-bold'>{user.displayName || getUserFromEmail(user.email!)}</p>
               <div className='flex self-start gap-1'>
                 <IoSparkles className='text-brand-100' />
                 <span className='text-gray-400'>1 karma</span>

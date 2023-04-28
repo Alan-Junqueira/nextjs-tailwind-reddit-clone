@@ -8,7 +8,8 @@ module.exports = {
           100: '#FF3C00',
         },
         down: {
-          100: '#4379FF'
+          100: '#4379FF',
+          200: '#3182CE'
         }
       },
       keyframes: {

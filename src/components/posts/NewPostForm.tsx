@@ -19,6 +19,7 @@ import { firestore, storage } from '@/firebase/clientApp'
 import { getDownloadURL, ref, uploadString } from 'firebase/storage'
 import { AlertError } from '../AlertError'
 import { useSelectedFile } from '@/hooks/useSelectedFile'
+import { getUserFromEmail } from '@/utils/get-user-from-email'
 
 const formTabs: TabItemType[] = [
   {
@@ -78,7 +79,7 @@ export const NewPostForm = ({ user, ...props }: INewPostForm) => {
       const newPost: Post = {
         communityId: communityId as string,
         creatorId: user.uid,
-        creatorDisplayName: user.email!.split('@')[0],
+        creatorDisplayName: getUserFromEmail(user.email!),
         title,
         textBody,
         numberOfComments: 0,

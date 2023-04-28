@@ -3,6 +3,7 @@
 import { Post } from "@/@types/Post";
 import { CommunityAbout } from "@/components/community/CommunityAbout";
 import { PageContent } from "@/components/layouts/PageContent";
+import { Comments } from "@/components/posts/Comments";
 import { PostItem } from "@/components/posts/PostItem";
 import { auth, firestore } from "@/firebase/clientApp";
 import { useCommunityStore } from "@/store/community/useCommunityStore";
@@ -65,7 +66,7 @@ export default function PostIdPage() {
             user={user}
           />
         }
-        {/* <Comments /> */}
+        <Comments user={user} communityId={communityId} selectedPost={selectedPost} />
       </>
       <>
         {currentCommunity &&
