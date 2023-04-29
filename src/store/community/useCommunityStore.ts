@@ -4,12 +4,7 @@ import { User } from 'firebase/auth'
 import { collection, doc, getDoc, getDocs, increment, writeBatch } from 'firebase/firestore'
 import { create } from 'zustand'
 import safeJsonStringify from 'safe-json-stringify'
-
-type CommunitySnippet = {
-  communityId: string
-  isModerator?: boolean
-  imageUrl?: string
-}
+import { CommunitySnippet } from '@/@types/CommunitySnippet'
 
 type CommunityState = {
   mySnippets: CommunitySnippet[]
@@ -107,7 +102,8 @@ export const useCommunityStore = create<CommunityStoreProps>((set, get, actions)
         const batch = writeBatch(firestore)
         const newSnippet: CommunitySnippet = {
           communityId: communityData.id,
-          imageUrl: communityData.imageUrl || ''
+          imageUrl: communityData.imageUrl || '',
+          isModerator: user.uid === communityData.creatorId
         }
 
         batch.set(doc(firestore, `users/${user.uid}/communitySnippets`, communityData.id), newSnippet)
