@@ -34,6 +34,8 @@ export const Login = () => {
 
   const [
     signInWithEmailAndPassword,
+    // eslint-disable-next-line no-unused-vars
+    _,
     loading,
     firebaseError,
   ] = useSignInWithEmailAndPassword(auth);
