@@ -20,10 +20,9 @@ export const CreatePostLink = () => {
       openModal('login')
       return
     }
-
     router.push(`/r/${communityId}/submit`)
-
   }
+
   return (
     <div className='flex items-center justify-evenly gap-4 bg-white h-14 rounded border border-gray-300 p-2 mb-4'>
       <FaReddit className='text-4xl text-gray-300' />
@@ -36,7 +35,6 @@ export const CreatePostLink = () => {
           focus:outline-none focus:bg-white focus:border-blue-500
         '
         onClick={handleInputClick}
-        onFocus={handleInputClick}
       />
       <IoImageOutline className='text-2xl text-gray-400 cursor-pointer' />
       <BsLink45Deg className='text-2xl text-gray-400 cursor-pointer' />

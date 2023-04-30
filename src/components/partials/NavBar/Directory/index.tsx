@@ -42,7 +42,7 @@ export const Directory = ({ ...props }: IDirectory) => {
   }, [communityId, mySnippets])
 
   return (
-    <DropdownMenu.Root {...props}>
+    <DropdownMenu.Root {...props} >
       <DropdownMenu.Trigger
         className='
           flex items-center gap-1 
@@ -64,9 +64,9 @@ export const Directory = ({ ...props }: IDirectory) => {
           communityId ? (
 
             <FaReddit size={24} className={`md:mr-1 ${actualSnippet.isModerator ? 'text-brand-100' : 'text-blue-500'}`} />
-            ) : 
+          ) :
             (
-              <TiHome size={24} className='text-black md:mr-1'/>
+              <TiHome size={24} className='text-black md:mr-1' />
             )
         )}
         <p className='hidden lg:flex font-semibold text-xs'>
