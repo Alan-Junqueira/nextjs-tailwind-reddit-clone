@@ -26,6 +26,10 @@ module.exports = {
         overlayShow: 'overlayShow 150ms cubic-bezier(0.16, 1, 0.3, 1)',
         contentShow: 'contentShow 150ms cubic-bezier(0.16, 1, 0.3, 1)',
       },
+      backgroundImage: {
+        'card-top-communities': "linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,0.75)), url('/assets/images/recCommsArt.png')",
+        'personal-home': 'url("/assets/images/redditPersonalHome.png")'
+      }
     },
   },
   plugins: [],

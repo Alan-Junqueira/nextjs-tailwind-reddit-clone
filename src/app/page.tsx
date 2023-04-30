@@ -2,6 +2,9 @@
 
 import { Post } from "@/@types/Post";
 import { PostVote } from "@/@types/PostVote";
+import { PersonalHome } from "@/components/community/PersonalHome";
+import { Premium } from "@/components/community/Premium";
+import { Recommendations } from "@/components/community/Recommendations";
 import { PageContent } from "@/components/layouts/PageContent";
 import { PostItem } from "@/components/posts/PostItem";
 import { PostSkeleton } from "@/components/skeletons/PostSkeleton";
@@ -138,9 +141,11 @@ export default function Home() {
           </div>
         )}
       </>
-      <>
-        {/* <Recommendations /> */}
-      </>
+      <div className="flex flex-col gap-5">
+        <Recommendations />
+        <Premium />
+        <PersonalHome />
+      </div>
     </PageContent>
   )
 }
