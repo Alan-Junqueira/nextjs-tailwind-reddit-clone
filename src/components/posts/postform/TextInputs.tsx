@@ -1,4 +1,3 @@
-import { Button } from '@/components/Button'
 import { InputRef } from '@/components/InputRef'
 import React, { useEffect } from 'react'
 import { useFormContext } from 'react-hook-form'
@@ -6,7 +5,7 @@ import { NewPostFormInputs } from '../NewPostForm'
 import { ButtonRef } from '@/components/ButtonRef'
 
 export const TextInputs = () => {
-  const { register, formState: { isSubmitting, errors }, setFocus, getValues } = useFormContext<NewPostFormInputs>()
+  const { register, formState: { isSubmitting }, setFocus} = useFormContext<NewPostFormInputs>()
 
   useEffect(() => { setFocus('title') }, [setFocus])
 

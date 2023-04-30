@@ -34,7 +34,6 @@ export const Login = () => {
 
   const [
     signInWithEmailAndPassword,
-    user,
     loading,
     firebaseError,
   ] = useSignInWithEmailAndPassword(auth);
@@ -82,7 +81,7 @@ export const Login = () => {
         className="w-full h-9 mt-4 mb-1"
         size="md"
         type="submit"
-        disabled={isSubmitting || loading}>
+        disabled={!!isSubmitting || !!loading}>
         Log In
       </Button>
       <TextError className='text-center mb-1'> {

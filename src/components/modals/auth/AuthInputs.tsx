@@ -5,8 +5,7 @@ import { SignUp } from './SignUp'
 
 export const AuthInputs = () => {
   const {
-    state: { view },
-    actions: { closeModal },
+    state: { view }
   } = useAuthModalStore()
 
   return (

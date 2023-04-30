@@ -12,7 +12,7 @@ import { auth } from '@/firebase/clientApp'
 import { ResetPassword } from './ResetPassword'
 
 export const AuthModal = () => {
-  const [user, loading, error] = useAuthState(auth)
+  const [user] = useAuthState(auth)
   const {
     actions: { closeModal },
     state: { open, view },

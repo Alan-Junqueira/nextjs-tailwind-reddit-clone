@@ -13,7 +13,7 @@ interface IJoinButtonHeader {
 }
 
 export const JoinButtonHeader = ({ communityData }: IJoinButtonHeader) => {
-  const [user, userLoading, error] = useAuthState(auth)
+  const [user, userLoading] = useAuthState(auth)
   const [toggleCommunityLoading, setToggleCommunityLoading] = useState<boolean>(false);
 
   const { state: { mySnippets }, actions: { onJoinOrLeaveCommunity, getMySnippets, resetSnippets } } = useCommunityStore()
