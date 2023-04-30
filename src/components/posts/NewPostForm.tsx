@@ -67,7 +67,7 @@ export const NewPostForm = ({ user, communityImageUrl, ...props }: INewPostForm)
   const newPostForm = useForm<NewPostFormInputs>({
     resolver: zodResolver(newPostFormSchema)
   })
-  const { handleSubmit, formState: { errors }, setError } = newPostForm
+  const { handleSubmit, formState: { errors }, setError, reset } = newPostForm
 
   const changeSelectedTab = (selectedTab: string) => {
     setSelectedTab(selectedTab);
@@ -100,9 +100,9 @@ export const NewPostForm = ({ user, communityImageUrl, ...props }: INewPostForm)
         await updateDoc(postDocRef, {
           imageUrl: downloadURL
         })
-
-        router.back()
       }
+      reset()
+      router.back()
     } catch (error: any) {
       console.log('handleCreatePost error', error.message)
       setError('root', { message: "Error creating post" })

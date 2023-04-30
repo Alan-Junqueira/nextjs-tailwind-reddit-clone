@@ -9,6 +9,7 @@ import { CommunitySnippet } from '@/@types/CommunitySnippet'
 type CommunityState = {
   mySnippets: CommunitySnippet[]
   currentCommunity?: Community
+  snippetsFetched: boolean
 }
 
 type CommunityActions = {
@@ -28,7 +29,8 @@ interface CommunityStoreProps {
 
 export const useCommunityStore = create<CommunityStoreProps>((set, get, actions) => ({
   state: {
-    mySnippets: []
+    mySnippets: [],
+    snippetsFetched: false
   },
   actions: {
     getMySnippets: async (user: User) => {
@@ -41,7 +43,7 @@ export const useCommunityStore = create<CommunityStoreProps>((set, get, actions)
 
         set((prev) => ({
           ...prev,
-          state: { ...prev.state, mySnippets: snippets as CommunitySnippet[] },
+          state: { ...prev.state, mySnippets: snippets as CommunitySnippet[], snippetsFetched: true },
         }))
       } catch (error) {
         console.log('getMySnippets error', error)
@@ -76,7 +78,7 @@ export const useCommunityStore = create<CommunityStoreProps>((set, get, actions)
     resetSnippets: () => {
       set((prev) => ({
         ...prev,
-        state: { ...prev.state, mySnippets: [] },
+        state: { ...prev.state, mySnippets: [], snippetsFetched: false },
       }))
     },
     leaveCommunity: async (communityId: string, user: User) => {
