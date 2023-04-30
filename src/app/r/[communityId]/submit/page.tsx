@@ -25,7 +25,7 @@ export default function CommunityIdSubmitPage() {
         <div className="py-3.5 border-b border-b-white">
           <p>Create a post</p>
         </div>
-        {user && <NewPostForm user={user} />}
+        {user && <NewPostForm user={user} communityImageUrl={currentCommunity?.imageUrl} />}
       </>
       <>
         {currentCommunity &&

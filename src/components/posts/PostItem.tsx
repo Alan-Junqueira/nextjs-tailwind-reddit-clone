@@ -6,7 +6,7 @@ import Image from "next/image";
 import { HTMLAttributes, MouseEvent, Suspense, useState } from "react"
 
 import { AiOutlineDelete } from "react-icons/ai";
-import { BsChat } from "react-icons/bs";
+import { BsChat, BsDot } from "react-icons/bs";
 import {
   IoArrowDownCircleOutline,
   IoArrowDownCircleSharp,
@@ -20,6 +20,8 @@ import { AlertError } from "../AlertError";
 import { User } from "firebase/auth";
 import { useAuthModalStore } from "@/store/modal/useAuthModalStore";
 import { useRouter } from "next/navigation";
+import { FaReddit } from "react-icons/fa";
+import Link from "next/link";
 
 interface IPostItem extends HTMLAttributes<HTMLDivElement> {
   post: Post;
@@ -29,8 +31,9 @@ interface IPostItem extends HTMLAttributes<HTMLDivElement> {
   onSelectPost?: (post: Post) => void
   onDeletePost: (post: Post) => Promise<boolean>
   user?: User | null
+  homePage?: boolean
 }
-export const PostItem = ({ onDeletePost, onSelectPost, onVote, post, userIsCreator, userVoteValue, user, ...props }: IPostItem) => {
+export const PostItem = ({ onDeletePost, onSelectPost, onVote, post, userIsCreator, userVoteValue, user, homePage, ...props }: IPostItem) => {
   const [deletePostError, setDeletePostError] = useState<string>('');
   const [isDeletingPost, setIsDeletingPost] = useState(false);
 
@@ -52,7 +55,7 @@ export const PostItem = ({ onDeletePost, onSelectPost, onVote, post, userIsCreat
       }
 
       console.log('Post was successfully deleted')
-      if(singlePostPage){
+      if (singlePostPage) {
         router.push(`/r/${post.communityId}`)
       }
     } catch (error: any) {
@@ -143,6 +146,30 @@ export const PostItem = ({ onDeletePost, onSelectPost, onVote, post, userIsCreat
         <div className="flex flex-col gap-1 p-2.5">
           <div className="flex gap-0.5 items-center text-xs">
             {/* Home page check */}
+            {homePage && (
+              <>
+                {post.communityImageUrl ? (
+                  <div className='w-[18px] h-[18px] relative'>
+                    <Image
+                      src={post.communityImageUrl}
+                      alt='Community Image'
+                      fill
+                      className='rounded-full object-cover mr-1'
+                    />
+                  </div>
+                ) : (
+                  <FaReddit size={18} className="mr-1 text-blue-500" />
+                )}
+                <Link
+                  href={`r/${post.communityId}`}
+                  className="font-bold hover:underline text-[10px]"
+                  onClick={e => e.stopPropagation()}
+                >
+                  {post.communityId}
+                </Link>
+                <BsDot size={8} className="text-gray-500" />
+              </>
+            )}
             <p className="text-[9px] text-gray-400">Posted by u/{post.creatorDisplayName} {moment(new Date(post.createdAt.seconds * 1000)).fromNow()}</p>
           </div>
           <h3 className="text-sm font-semibold">

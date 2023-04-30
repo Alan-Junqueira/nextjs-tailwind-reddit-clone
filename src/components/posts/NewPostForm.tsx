@@ -53,9 +53,10 @@ export type NewPostFormInputs = z.infer<typeof newPostFormSchema>
 
 interface INewPostForm extends HTMLAttributes<HTMLDivElement> {
   user: User
+  communityImageUrl?: string
 }
 
-export const NewPostForm = ({ user, ...props }: INewPostForm) => {
+export const NewPostForm = ({ user, communityImageUrl, ...props }: INewPostForm) => {
   const [selectedTab, setSelectedTab] = useState<string>(formTabs[0].title);
 
   const { changeSelectedFile, handleSelectFile, selectedFile, } = useSelectedFile()
@@ -78,6 +79,7 @@ export const NewPostForm = ({ user, ...props }: INewPostForm) => {
       const { textBody, title } = data
       const newPost: Post = {
         communityId: communityId as string,
+        communityImageUrl: communityImageUrl || '',
         creatorId: user.uid,
         creatorDisplayName: getUserFromEmail(user.email!),
         title,
