@@ -1,6 +1,7 @@
 'use client'
 
 import { Post } from "@/@types/Post";
+import { PostVote } from "@/@types/PostVote";
 import { PageContent } from "@/components/layouts/PageContent";
 import { PostItem } from "@/components/posts/PostItem";
 import { PostSkeleton } from "@/components/skeletons/PostSkeleton";
@@ -15,10 +16,8 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(false);
 
   const [user, loadingUser] = useAuthState(auth)
-  const { actions: { getPostsStore, onSelectPost, onDeletePost, onVote }, state: { posts, postVotes, } } = usePostsStore()
+  const { actions: { getPostsStore, onSelectPost, onDeletePost, onVote, changePostVotes }, state: { posts, postVotes, } } = usePostsStore()
   const { state: { mySnippets, snippetsFetched } } = useCommunityStore()
-
-
 
   const buildNoUserHomeFeed = useCallback(
     async () => {
@@ -78,7 +77,28 @@ export default function Home() {
     [buildNoUserHomeFeed, getPostsStore, mySnippets]
   )
 
-  const getUserPostVotes = () => { }
+  const getUserPostVotes = useCallback(
+    async () => {
+      try {
+        const postIds = posts.map(post => post.id)
+        const postVotesQuery = query(
+          collection(firestore, `users/${user?.uid}/postVotes`),
+          where('postId', 'in', postIds)
+        )
+        const postVoteDocs = await getDocs(postVotesQuery)
+
+        const postVotes = postVoteDocs.docs.map(doc => ({
+          id: doc.id, ...doc.data()
+        })) as PostVote[]
+
+        changePostVotes(postVotes)
+      } catch (error) {
+        console.log('getUserPostVotes error', error)
+      }
+    }
+    ,
+    [changePostVotes, posts, user?.uid]
+  )
 
   useEffect(() => {
     if (!user && !loadingUser) buildNoUserHomeFeed()
@@ -87,6 +107,10 @@ export default function Home() {
   useEffect(() => {
     if (snippetsFetched) buildUserHomeFeed()
   }, [buildNoUserHomeFeed, buildUserHomeFeed, loadingUser, snippetsFetched, user])
+
+  useEffect(() => {
+    if (user && posts.length) getUserPostVotes()
+  }, [getUserPostVotes, posts.length, user])
 
   return (
     <PageContent>
@@ -107,6 +131,7 @@ export default function Home() {
                 onVote={onVote}
                 userVoteValue={postVotes.find(vote => vote.postId === post.id)?.voteValue}
                 userIsCreator={user?.uid === post.creatorId}
+                user={user}
                 homePage
               />
             ))}

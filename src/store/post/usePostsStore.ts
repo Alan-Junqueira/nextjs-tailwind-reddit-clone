@@ -21,6 +21,7 @@ type PostsActions = {
   clearPostVotesStore: () => void
   getCommunityPostVoteStore: (user: any, postId: string) => void
   updatePostComments: (amount: number) => void
+  changePostVotes: (postVotes: PostVote[]) => void
 }
 
 interface PostsStoreProps {
@@ -242,6 +243,15 @@ export const usePostsStore = create<PostsStoreProps>((set, get, actions) => ({
         state: {
           ...prev.state,
           postVotes: []
+        }
+      }))
+    },
+    changePostVotes: (postVotes: PostVote[]) => {
+      set((prev) => ({
+        ...prev,
+        state: {
+          ...prev.state,
+          postVotes
         }
       }))
     }

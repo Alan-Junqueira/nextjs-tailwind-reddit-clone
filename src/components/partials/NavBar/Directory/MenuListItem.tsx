@@ -1,5 +1,5 @@
 import { ReactNode } from "react"
-import { Item, Separator, MenuItemProps } from '@radix-ui/react-dropdown-menu';
+import { Item, MenuItemProps } from '@radix-ui/react-dropdown-menu';
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
@@ -20,6 +20,7 @@ export const MenuListItem = ({ communityLink, displayText, icon, imageUrl, ...pr
         hover:bg-gray-100
         flex items-center gap-2
         px-2 py-1
+        cursor-pointer
         ${props.className}
       `}
       onClick={() => router.push(communityLink)}

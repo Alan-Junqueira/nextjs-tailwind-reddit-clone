@@ -14,6 +14,7 @@ import { CheckBox } from './CheckBox';
 import { doc, runTransaction, serverTimestamp } from 'firebase/firestore';
 import { auth, firestore } from '@/firebase/clientApp';
 import { useAuthState } from 'react-firebase-hooks/auth';
+import { useRouter } from 'next/navigation';
 
 interface ICreateCommunityModal extends Dialog.DialogProps {
 }
@@ -30,6 +31,8 @@ const communityFormSchema = z.object({
 type CommunityFormInputs = z.infer<typeof communityFormSchema>
 
 export const CreateCommunityModal = ({ ...props }: ICreateCommunityModal) => {
+  const router = useRouter()
+
   const [user] = useAuthState(auth)
 
   const createCommunityForm = useForm<CommunityFormInputs>({
@@ -76,6 +79,7 @@ export const CreateCommunityModal = ({ ...props }: ICreateCommunityModal) => {
         })
 
         closeButton.current?.click()
+        router.push(`r/${communityName}`)
       })
     } catch (error: any) {
       console.log('handleCreateCommunity error', error)

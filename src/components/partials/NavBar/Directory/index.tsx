@@ -16,9 +16,8 @@ export const Directory = ({ ...props }: IDirectory) => {
   const [actualSnippet, setActualSnippet] = useState<CommunitySnippet>({} as CommunitySnippet);
 
   const { communityId } = useParams()
-  const { state: { mySnippets } } = useCommunityStore()
 
-  console.log(actualSnippet)
+  const { state: { mySnippets } } = useCommunityStore()
 
   useLayoutEffect(() => {
     if (mySnippets) {
@@ -51,6 +50,7 @@ export const Directory = ({ ...props }: IDirectory) => {
           hover:outline-1 hover:outline hover:outline-gray-200 focus:outline-gray-200
           w-auto lg:w-52
         '
+
       >
         {actualSnippet.imageUrl ? (
           <Image
