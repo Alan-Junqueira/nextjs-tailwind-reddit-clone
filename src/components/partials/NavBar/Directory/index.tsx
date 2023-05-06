@@ -8,12 +8,14 @@ import { useLayoutEffect, useState } from 'react';
 import { CommunitySnippet } from '@/@types/CommunitySnippet';
 import Image from 'next/image';
 import { FaReddit } from 'react-icons/fa';
+import { useDirectoryMenuStore } from '@/store/directory/useDirectoryMenu';
 
 interface IDirectory extends DropdownMenu.DropdownMenuProps {
 }
 
 export const Directory = ({ ...props }: IDirectory) => {
   const [actualSnippet, setActualSnippet] = useState<CommunitySnippet>({} as CommunitySnippet);
+  const { state: { directoryOpen }, actions: { toggleDirectory, closeDirectory } } = useDirectoryMenuStore()
 
   const { communityId } = useParams()
 
@@ -41,7 +43,7 @@ export const Directory = ({ ...props }: IDirectory) => {
   }, [communityId, mySnippets])
 
   return (
-    <DropdownMenu.Root {...props} defaultOpen={false}>
+    <DropdownMenu.Root {...props} open={directoryOpen}>
       <DropdownMenu.Trigger
         className='
           flex items-center gap-1 
@@ -50,7 +52,7 @@ export const Directory = ({ ...props }: IDirectory) => {
           hover:outline-1 hover:outline hover:outline-gray-200 focus:outline-gray-200
           w-auto lg:w-52
         '
-
+        onClick={toggleDirectory}
       >
         {actualSnippet.imageUrl ? (
           <Image
@@ -74,8 +76,12 @@ export const Directory = ({ ...props }: IDirectory) => {
         </p>
         <FiChevronDown size={14} className='text-gray-800' />
       </DropdownMenu.Trigger>
-      <DropdownMenu.Portal className='h-fit'>
-        <DropdownMenu.Content className='py-2 flex flex-col gap-1 bg-white border border-gray-200 mt-2 rounded-md w-52'>
+      <DropdownMenu.Portal className='h-fit' >
+        <DropdownMenu.Content
+          className='py-2 flex flex-col gap-1 bg-white border border-gray-200 mt-2 rounded-md w-52'
+          onEscapeKeyDown={closeDirectory}
+          onPointerDownOutside={closeDirectory}
+        >
           <Communities />
           {/* <RadixDropdownIconText className='px-3 py-1 w-full'>
             <CgProfile className='font-medium text-xl' /> <span className='text-xs font-bold'>Profile</span>

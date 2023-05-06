@@ -6,7 +6,7 @@ import { IoImageOutline } from 'react-icons/io5'
 import { BsLink45Deg } from 'react-icons/bs'
 import { useRouter, useParams } from 'next/navigation'
 import { useAuthState } from 'react-firebase-hooks/auth'
-import { auth } from '@/firebase/clientApp'
+import { auth } from '@/libs/firebase/clientApp'
 import { useAuthModalStore } from '@/store/modal/useAuthModalStore'
 
 export const CreatePostLink = () => {

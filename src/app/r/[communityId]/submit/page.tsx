@@ -3,7 +3,7 @@
 import { CommunityAbout } from "@/components/community/CommunityAbout";
 import { PageContent } from "@/components/layouts/PageContent";
 import { NewPostForm } from "@/components/posts/NewPostForm";
-import { auth } from "@/firebase/clientApp";
+import { auth } from "@/libs/firebase/clientApp";
 import { useCommunityStore } from "@/store/community/useCommunityStore";
 import { useParams } from "next/navigation";
 import { useEffect } from "react";

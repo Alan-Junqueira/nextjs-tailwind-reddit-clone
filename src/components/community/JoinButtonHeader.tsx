@@ -5,7 +5,7 @@ import { Button } from '../Button'
 import { useCommunityStore } from '@/store/community/useCommunityStore'
 import { Community } from '@/@types/Community'
 import { useAuthState } from 'react-firebase-hooks/auth'
-import { auth } from '@/firebase/clientApp'
+import { auth } from '@/libs/firebase/clientApp'
 import { useAuthModalStore } from '@/store/modal/useAuthModalStore'
 
 interface IJoinButtonHeader {

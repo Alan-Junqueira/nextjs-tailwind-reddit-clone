@@ -6,9 +6,9 @@ import { InputContainer } from '@/components/InputContainer'
 import { Button } from '@/components/Button'
 import { useAuthModalStore } from '@/store/modal/useAuthModalStore'
 import { TextError } from './TextError'
-import { auth } from '@/firebase/clientApp'
+import { auth } from '@/libs/firebase/clientApp'
 import { useSignInWithEmailAndPassword } from 'react-firebase-hooks/auth'
-import { FIREBASE_ERRORS } from '@/firebase/errors'
+import { FIREBASE_ERRORS } from '@/libs/firebase/errors'
 
 const loginSchema = z.object({
   email: z.string().email({ message: 'Digite um email válido' }),

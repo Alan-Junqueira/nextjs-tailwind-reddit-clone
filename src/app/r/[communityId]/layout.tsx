@@ -2,7 +2,7 @@ import { ReactNode } from 'react'
 import { Metadata } from 'next'
 import { CommunityHeader } from '@/components/community/CommunityHeader'
 import { doc, getDoc } from 'firebase/firestore'
-import { firestore } from '@/firebase/clientApp'
+import { firestore } from '@/libs/firebase/clientApp'
 import safeJsonStringify from 'safe-json-stringify'
 
 export const metadata: Metadata = {

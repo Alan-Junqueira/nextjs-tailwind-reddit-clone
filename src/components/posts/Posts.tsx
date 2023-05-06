@@ -2,7 +2,7 @@
 
 import { Community } from '@/@types/Community'
 import { Post } from '@/@types/Post';
-import { auth, firestore } from '@/firebase/clientApp';
+import { auth, firestore } from '@/libs/firebase/clientApp';
 import { usePostsStore } from '@/store/post/usePostsStore';
 import { collection, getDocs, orderBy, query, where } from 'firebase/firestore';
 import { HTMLAttributes, useCallback, useEffect, useState } from 'react'
@@ -55,7 +55,7 @@ export const Posts = ({ communityData, ...props }: IPosts) => {
 
   return (
     <>
-      {isLoading  ? (
+      {isLoading ? (
         <div {...props} className='flex flex-col gap-3'>
           <PostSkeleton />
           <PostSkeleton />

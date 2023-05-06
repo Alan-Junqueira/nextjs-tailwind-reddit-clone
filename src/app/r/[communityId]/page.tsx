@@ -4,7 +4,7 @@ import { CommunityNotFound } from "@/components/community/CommunityNotFound"
 import { CreatePostLink } from "@/components/community/CreatePostLink"
 import { PageContent } from "@/components/layouts/PageContent"
 import { Posts } from "@/components/posts/Posts"
-import { firestore } from "@/firebase/clientApp"
+import { firestore } from "@/libs/firebase/clientApp"
 import { doc, getDoc } from "firebase/firestore"
 import safeJsonStringify from 'safe-json-stringify'
 

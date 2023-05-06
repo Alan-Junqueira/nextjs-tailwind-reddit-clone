@@ -12,7 +12,7 @@ import { z } from 'zod';
 import { AiOutlineClose } from 'react-icons/ai'
 import { CheckBox } from './CheckBox';
 import { doc, runTransaction, serverTimestamp } from 'firebase/firestore';
-import { auth, firestore } from '@/firebase/clientApp';
+import { auth, firestore } from '@/libs/firebase/clientApp';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useRouter } from 'next/navigation';
 

@@ -7,7 +7,7 @@ import { IoSparkles } from 'react-icons/io5'
 import { CgProfile } from 'react-icons/cg'
 import { MdOutlineLogin } from 'react-icons/md'
 import { RadixDropdownIconText } from '@/components/RadixDropdownIconText';
-import { auth } from '@/firebase/clientApp';
+import { auth } from '@/libs/firebase/clientApp';
 import { useAuthModalStore } from '@/store/modal/useAuthModalStore';
 import { useCommunityStore } from '@/store/community/useCommunityStore';
 import { usePostsStore } from '@/store/post/usePostsStore';

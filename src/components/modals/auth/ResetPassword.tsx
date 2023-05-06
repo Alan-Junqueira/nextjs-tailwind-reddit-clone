@@ -1,4 +1,4 @@
-import { auth } from '@/firebase/clientApp';
+import { auth } from '@/libs/firebase/clientApp';
 import { useAuthModalStore } from '@/store/modal/useAuthModalStore'
 import { BsDot, BsReddit } from "react-icons/bs";
 import { useSendPasswordResetEmail } from 'react-firebase-hooks/auth';
@@ -9,7 +9,7 @@ import { InputContainer } from '@/components/InputContainer';
 import { TextError } from './TextError';
 import { Button } from '@/components/Button';
 import { InputRef } from '@/components/InputRef';
-import { FIREBASE_ERRORS } from '@/firebase/errors';
+import { FIREBASE_ERRORS } from '@/libs/firebase/errors';
 
 const resetPasswordSchema = z.object({
   email: z.string().email({ message: "Digite um email válido" })

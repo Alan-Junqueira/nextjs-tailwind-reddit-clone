@@ -1,5 +1,7 @@
+'use client'
+
 import { Community } from '@/@types/Community';
-import { auth, firestore } from '@/firebase/clientApp';
+import { auth, firestore } from '@/libs/firebase/clientApp';
 import { useCommunityStore } from '@/store/community/useCommunityStore';
 import { collection, getDocs, limit, orderBy, query } from 'firebase/firestore';
 import React, { MouseEvent, useEffect, useState } from 'react'

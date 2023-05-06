@@ -2,6 +2,7 @@ import { ReactNode } from "react"
 import { Item, MenuItemProps } from '@radix-ui/react-dropdown-menu';
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { useDirectoryMenuStore } from "@/store/directory/useDirectoryMenu";
 
 interface IMenuListItem extends MenuItemProps {
   displayText: string
@@ -12,6 +13,8 @@ interface IMenuListItem extends MenuItemProps {
 
 export const MenuListItem = ({ communityLink, displayText, icon, imageUrl, ...props }: IMenuListItem) => {
   const router = useRouter()
+
+  const { actions: { closeDirectory } } = useDirectoryMenuStore()
   return (
     <Item
       {...props}
@@ -24,6 +27,7 @@ export const MenuListItem = ({ communityLink, displayText, icon, imageUrl, ...pr
         ${props.className}
       `}
       onClick={() => router.push(communityLink)}
+      onSelect={closeDirectory}
     >
       {imageUrl ? (
         <Image

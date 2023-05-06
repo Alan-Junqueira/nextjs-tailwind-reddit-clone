@@ -1,5 +1,5 @@
 import { Button } from '@/components/Button'
-import { auth, firestore } from '@/firebase/clientApp';
+import { auth, firestore } from '@/libs/firebase/clientApp';
 import Image from 'next/image'
 import { useSignInWithGoogle } from "react-firebase-hooks/auth"
 import { TextError } from './TextError';

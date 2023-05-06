@@ -5,7 +5,7 @@ import { CommunityAbout } from "@/components/community/CommunityAbout";
 import { PageContent } from "@/components/layouts/PageContent";
 import { Comments } from "@/components/posts/Comments";
 import { PostItem } from "@/components/posts/PostItem";
-import { auth, firestore } from "@/firebase/clientApp";
+import { auth, firestore } from "@/libs/firebase/clientApp";
 import { useCommunityStore } from "@/store/community/useCommunityStore";
 import { usePostsStore } from "@/store/post/usePostsStore";
 import { doc, getDoc } from "firebase/firestore";

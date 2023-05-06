@@ -1,4 +1,4 @@
-import { firestore, storage } from '@/firebase/clientApp'
+import { firestore, storage } from '@/libs/firebase/clientApp'
 import { User } from 'firebase/auth'
 import { collection, deleteDoc, doc, getDocs, query, where, writeBatch } from 'firebase/firestore'
 import { create } from 'zustand'

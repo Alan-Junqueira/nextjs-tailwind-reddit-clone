@@ -8,7 +8,7 @@ import { AiOutlineClose } from 'react-icons/ai'
 import { AuthInputs } from './AuthInputs'
 import { OauthButtons } from './OauthButtons'
 import { useAuthState } from 'react-firebase-hooks/auth'
-import { auth } from '@/firebase/clientApp'
+import { auth } from '@/libs/firebase/clientApp'
 import { ResetPassword } from './ResetPassword'
 
 export const AuthModal = () => {

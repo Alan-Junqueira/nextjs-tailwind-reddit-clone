@@ -1,5 +1,5 @@
 import { Community } from '@/@types/Community'
-import { firestore } from '@/firebase/clientApp'
+import { firestore } from '@/libs/firebase/clientApp'
 import { User } from 'firebase/auth'
 import { collection, doc, getDoc, getDocs, increment, writeBatch } from 'firebase/firestore'
 import { create } from 'zustand'
