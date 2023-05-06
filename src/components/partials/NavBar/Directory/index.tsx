@@ -78,14 +78,11 @@ export const Directory = ({ ...props }: IDirectory) => {
       </DropdownMenu.Trigger>
       <DropdownMenu.Portal className='h-fit' >
         <DropdownMenu.Content
-          className='py-2 flex flex-col gap-1 bg-white border border-gray-200 mt-2 rounded-md w-52'
+          className='py-2 flex flex-col gap-1 bg-white border border-gray-200 mt-2 rounded-md w-52 max-h-96 overflow-y-scroll'
           onEscapeKeyDown={closeDirectory}
           onPointerDownOutside={closeDirectory}
         >
           <Communities />
-          {/* <RadixDropdownIconText className='px-3 py-1 w-full'>
-            <CgProfile className='font-medium text-xl' /> <span className='text-xs font-bold'>Profile</span>
-          </RadixDropdownIconText> */}
         </DropdownMenu.Content>
       </DropdownMenu.Portal>
     </DropdownMenu.Root>

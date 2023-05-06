@@ -1,11 +1,10 @@
-import React from 'react'
 import { FaReddit } from 'react-icons/fa'
 import { Button } from '../Button'
 
 export const PersonalHome = () => {
   return (
     <div
-      className='flex flex-col bg-white rounded cursor-pointer border border-gray-300 sticky'
+      className='flex flex-col bg-white rounded border border-gray-300 sticky'
     >
       <div
         className="flex items-end text-white py-1.5 px-2.5 bg-blue-500 h-9 rounded-t font-semibold bg-personal-home bg-cover"

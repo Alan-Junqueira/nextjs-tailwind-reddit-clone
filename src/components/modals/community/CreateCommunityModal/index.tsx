@@ -1,3 +1,5 @@
+'use client'
+
 import { ButtonRef } from '@/components/ButtonRef';
 import { InputContainer } from '@/components/InputContainer';
 import { InputRef } from '@/components/InputRef';
@@ -15,6 +17,8 @@ import { doc, runTransaction, serverTimestamp } from 'firebase/firestore';
 import { auth, firestore } from '@/libs/firebase/clientApp';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useRouter } from 'next/navigation';
+import { useCreateCommunityModalStore } from '@/store/modal/useCreateCommunityModalStore';
+import { useDirectoryMenuStore } from '@/store/directory/useDirectoryMenu';
 
 interface ICreateCommunityModal extends Dialog.DialogProps {
 }
@@ -32,6 +36,9 @@ type CommunityFormInputs = z.infer<typeof communityFormSchema>
 
 export const CreateCommunityModal = ({ ...props }: ICreateCommunityModal) => {
   const router = useRouter()
+
+  const { state: { createCommunityModalOpen }, actions: { closeCreateCommunityModal, openCreateCommunityModal } } = useCreateCommunityModalStore()
+  const { actions: { closeDirectory } } = useDirectoryMenuStore()
 
   const [user] = useAuthState(auth)
 
@@ -79,6 +86,7 @@ export const CreateCommunityModal = ({ ...props }: ICreateCommunityModal) => {
         })
 
         closeButton.current?.click()
+        closeDirectory()
         router.push(`r/${communityName}`)
       })
     } catch (error: any) {
@@ -87,11 +95,14 @@ export const CreateCommunityModal = ({ ...props }: ICreateCommunityModal) => {
     }
   }
 
+  console.log('modal', createCommunityModalOpen)
+
   useEffect(() => { setFocus('communityName') }, [setFocus])
   return (
-    <Dialog.Root {...props} >
+    <Dialog.Root {...props} open={createCommunityModalOpen}>
       <Dialog.Trigger
         className='flex w-full items-center gap-2 px-3 py-2  hover:bg-gray-200/50 bg-gray-100/80 outline-gray-300/50'
+        onClick={openCreateCommunityModal}
       >
         <GrAdd className='font-medium text-lg' />
         <span className='text-xs font-bold text-gray-800/90'>Create Community</span>
@@ -108,6 +119,8 @@ export const CreateCommunityModal = ({ ...props }: ICreateCommunityModal) => {
             bg-white overflow-hidden
             '
           asChild
+          onEscapeKeyDown={closeCreateCommunityModal}
+          onPointerDownOutside={closeCreateCommunityModal}
         >
           <form onSubmit={handleSubmit(handleCreateCommunity)}>
             <Dialog.Title className='text-sm font-bold pb-2 mb-3 border-b border-b-gray-300/50 px-2'>Create a community</Dialog.Title>
@@ -143,7 +156,10 @@ export const CreateCommunityModal = ({ ...props }: ICreateCommunityModal) => {
             </div>
             <div className="mt-[25px] flex gap-3 justify-end bg-gray-100 p-4">
               <Dialog.Close asChild>
-                <ButtonRef className='h-7' variant='outline' submittingText="canceling">
+                <ButtonRef className='h-7' variant='outline' submittingText="canceling" onClick={() => {
+                  closeCreateCommunityModal()
+                  closeDirectory()
+                }}>
                   Cancel
                 </ButtonRef>
               </Dialog.Close>
@@ -164,6 +180,10 @@ export const CreateCommunityModal = ({ ...props }: ICreateCommunityModal) => {
               outline-none
               " aria-label="Close"
               ref={closeButton}
+              onClick={() => {
+                closeCreateCommunityModal()
+                closeDirectory()
+              }}
             >
               <AiOutlineClose />
             </Dialog.Close>

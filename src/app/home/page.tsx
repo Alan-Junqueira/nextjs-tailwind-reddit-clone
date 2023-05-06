@@ -126,6 +126,7 @@ export default function Home() {
           </>
         ) : (
           <div className="flex gap-1 flex-col">
+            {/* <CreatePostLink /> */}
             {posts.map(post => (
               <PostItem
                 key={post.id}
