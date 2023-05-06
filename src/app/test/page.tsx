@@ -29,7 +29,7 @@ export default async function TestPage() {
 
   return (
     <div>
-      <h1>teste</h1>
+      {posts?.map(post => post.id)}
     </div>
   )
 }
