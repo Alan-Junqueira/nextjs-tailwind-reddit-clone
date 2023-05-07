@@ -54,7 +54,6 @@ export const PostItem = ({ onDeletePost, onSelectPost, onVote, post, userIsCreat
         throw new Error('Failed to delete post')
       }
 
-      console.log('Post was successfully deleted')
       if (singlePostPage) {
         router.push(`/r/${post.communityId}`)
       }

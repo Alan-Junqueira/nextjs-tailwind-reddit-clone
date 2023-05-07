@@ -97,8 +97,6 @@ export const CreateCommunityModal = ({ inDropdown, ...props }: ICreateCommunityM
     }
   }
 
-  console.log('modal', createCommunityModalOpen)
-
   useEffect(() => { setFocus('communityName') }, [setFocus])
   return (
     <Dialog.Root {...props} open={createCommunityModalOpen}>

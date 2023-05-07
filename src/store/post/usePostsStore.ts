@@ -138,8 +138,6 @@ export const usePostsStore = create<PostsStoreProps>((set, get, actions) => ({
         const { voteStatus } = post
         const existingVote = get().state.postVotes.find(vote => vote.postId === post.id)
 
-        console.log(existingVote)
-
         const batch = writeBatch(firestore)
         const updatedPost: Post = { ...post }
         const updatedPosts = [...get().state.posts]

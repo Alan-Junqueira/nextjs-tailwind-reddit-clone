@@ -41,7 +41,6 @@ export const Recommendations = () => {
   }
 
   const handleJoinCommunity = (e: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>, community: Community, isJoined: boolean) => {
-    console.log(e)
     e.preventDefault()
     e.stopPropagation()
     onJoinOrLeaveCommunity(community, user, isJoined)
