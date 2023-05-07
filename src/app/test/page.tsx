@@ -15,10 +15,7 @@ const getPosts = async () => {
       ...doc.data()
     })) as Post[]
 
-    console.log(posts)
-
     return posts
-
   } catch (error) {
     console.log('buildUserHomeFeed error: ', error)
   }

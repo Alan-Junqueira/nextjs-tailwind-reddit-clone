@@ -81,6 +81,7 @@ export const Directory = ({ ...props }: IDirectory) => {
           className='py-2 flex flex-col gap-1 bg-white border border-gray-200 mt-2 rounded-md w-52 max-h-96 overflow-y-scroll'
           onEscapeKeyDown={closeDirectory}
           onPointerDownOutside={closeDirectory}
+          onInteractOutside={closeDirectory}
         >
           <Communities />
         </DropdownMenu.Content>

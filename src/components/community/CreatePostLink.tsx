@@ -8,16 +8,23 @@ import { useRouter, useParams } from 'next/navigation'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { auth } from '@/libs/firebase/clientApp'
 import { useAuthModalStore } from '@/store/modal/useAuthModalStore'
+import { useDirectoryMenuStore } from '@/store/directory/useDirectoryMenu'
 
 export const CreatePostLink = () => {
   const router = useRouter()
   const { communityId } = useParams()
   const [user] = useAuthState(auth)
   const { actions: { openModal } } = useAuthModalStore()
+  const { actions: { openDirectory } } = useDirectoryMenuStore()
 
   const handleInputClick = () => {
     if (!user) {
       openModal('login')
+      return
+    }
+
+    if (!communityId) {
+      openDirectory()
       return
     }
     router.push(`/r/${communityId}/submit`)

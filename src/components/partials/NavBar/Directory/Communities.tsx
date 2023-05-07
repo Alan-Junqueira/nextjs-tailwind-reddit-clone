@@ -23,7 +23,7 @@ export const Communities = () => {
       <div className='mt-3'>
         <p className='pl-3 text-[8px] font-medium text-gray-500'>MY COMMUNITIES</p>
       </div>
-      <CreateCommunityModal />
+      <CreateCommunityModal inDropdown/>
       {mySnippets.map(snippet => (
         <MenuListItem
           key={snippet.communityId}

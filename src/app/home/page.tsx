@@ -2,6 +2,7 @@
 
 import { Post } from "@/@types/Post";
 import { PostVote } from "@/@types/PostVote";
+import { CreatePostLink } from "@/components/community/CreatePostLink";
 import { PersonalHome } from "@/components/community/PersonalHome";
 import { Premium } from "@/components/community/Premium";
 import { Recommendations } from "@/components/community/Recommendations";
@@ -126,7 +127,7 @@ export default function Home() {
           </>
         ) : (
           <div className="flex gap-1 flex-col">
-            {/* <CreatePostLink /> */}
+            <CreatePostLink />
             {posts.map(post => (
               <PostItem
                 key={post.id}

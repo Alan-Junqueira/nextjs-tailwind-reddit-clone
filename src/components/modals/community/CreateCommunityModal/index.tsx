@@ -19,8 +19,10 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 import { useRouter } from 'next/navigation';
 import { useCreateCommunityModalStore } from '@/store/modal/useCreateCommunityModalStore';
 import { useDirectoryMenuStore } from '@/store/directory/useDirectoryMenu';
+import { Button } from '@/components/Button';
 
 interface ICreateCommunityModal extends Dialog.DialogProps {
+  inDropdown?: boolean
 }
 
 const communityFormSchema = z.object({
@@ -34,7 +36,7 @@ const communityFormSchema = z.object({
 
 type CommunityFormInputs = z.infer<typeof communityFormSchema>
 
-export const CreateCommunityModal = ({ ...props }: ICreateCommunityModal) => {
+export const CreateCommunityModal = ({ inDropdown, ...props }: ICreateCommunityModal) => {
   const router = useRouter()
 
   const { state: { createCommunityModalOpen }, actions: { closeCreateCommunityModal, openCreateCommunityModal } } = useCreateCommunityModalStore()
@@ -100,13 +102,23 @@ export const CreateCommunityModal = ({ ...props }: ICreateCommunityModal) => {
   useEffect(() => { setFocus('communityName') }, [setFocus])
   return (
     <Dialog.Root {...props} open={createCommunityModalOpen}>
-      <Dialog.Trigger
-        className='flex w-full items-center gap-2 px-3 py-2  hover:bg-gray-200/50 bg-gray-100/80 outline-gray-300/50'
-        onClick={openCreateCommunityModal}
-      >
-        <GrAdd className='font-medium text-lg' />
-        <span className='text-xs font-bold text-gray-800/90'>Create Community</span>
-      </Dialog.Trigger>
+      {inDropdown ? (
+
+        <Dialog.Trigger
+          className='flex w-full items-center gap-2 px-3 py-2  hover:bg-gray-200/50 bg-gray-100/80 outline-gray-300/50'
+          onClick={openCreateCommunityModal}
+        >
+          <GrAdd className='font-medium text-lg' />
+          <span className='text-xs font-bold text-gray-800/90'>Create Community</span>
+        </Dialog.Trigger>
+      ) : (
+        <Dialog.Trigger
+          onClick={openCreateCommunityModal}
+          asChild
+        >
+          <Button variant="outline" className='h-7' >Create Community</Button>
+        </Dialog.Trigger>
+      )}
       <Dialog.Portal >
         <Dialog.Overlay
           className='data-[state=open]:animate-overlayShow fixed inset-0 bg-black/30' />

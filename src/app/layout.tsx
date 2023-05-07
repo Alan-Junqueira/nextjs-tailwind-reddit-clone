@@ -5,6 +5,7 @@ import { Metadata } from 'next'
 import './globals.css'
 
 import { NavBar } from '@/components/partials/NavBar'
+import { BackToTop } from '@/components/BackToTop'
 
 const openSans = Open_Sans({
   subsets: ['latin'],
@@ -21,6 +22,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <html lang="en">
       <body className={`${openSans.className} bg-gray-100`}>
         <NavBar />
+        <BackToTop />
         <div>{children}</div>
       </body>
     </html>
