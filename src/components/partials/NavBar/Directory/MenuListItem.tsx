@@ -24,6 +24,9 @@ export const MenuListItem = ({ communityLink, displayText, icon, imageUrl, ...pr
         flex items-center gap-2
         px-2 py-1
         cursor-pointer
+        hover:outline-none
+        border-l border-l-transparent hover:border-l-gray-500
+        transition ease-in duration-200
         ${props.className}
       `}
       onClick={() => router.push(communityLink)}

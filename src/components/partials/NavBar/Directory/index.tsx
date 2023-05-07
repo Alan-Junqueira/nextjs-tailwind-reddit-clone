@@ -43,7 +43,7 @@ export const Directory = ({ ...props }: IDirectory) => {
   }, [communityId, mySnippets])
 
   return (
-    <DropdownMenu.Root {...props} open={directoryOpen}>
+    <DropdownMenu.Root {...props} open={directoryOpen} modal={false}>
       <DropdownMenu.Trigger
         className='
           flex items-center gap-1 
